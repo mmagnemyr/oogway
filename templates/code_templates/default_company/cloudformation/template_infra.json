@@ -1,0 +1,552 @@
+{
+    "Description": "csa data source buckets and infrastructure",
+    "Resources": {
+     "stagedcsadmsvgcsodlprodB6651931": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+       "BucketEncryption": {
+        "ServerSideEncryptionConfiguration": [
+         {
+          "ServerSideEncryptionByDefault": {
+           "SSEAlgorithm": "AES256"
+          }
+         }
+        ]
+       },
+       "BucketName": "staged-csa-dms-vgcs-odl-prod",
+       "PublicAccessBlockConfiguration": {
+        "BlockPublicAcls": true,
+        "BlockPublicPolicy": true,
+        "IgnorePublicAcls": true,
+        "RestrictPublicBuckets": true
+       },
+       "Tags": [
+        {
+         "Key": "BuiltBy",
+         "Value": "Pipelines"
+        },
+        {
+         "Key": "Component",
+         "Value": "ODL Common Infrastructure"
+        },
+        {
+         "Key": "ECS",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Name",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "Owner",
+         "Value": "ODL"
+        },
+        {
+         "Key": "ProductDomain",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Project",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "SemanticVersion",
+         "Value": "0.0.37"
+        },
+        {
+         "Key": "Version",
+         "Value": "37"
+        }
+       ]
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/staged-csa-dms-vgcs-odl-prod/Resource"
+      }
+     },
+     "stagedcsadmsid": {
+      "Type": "AWS::Glue::Database",
+      "Properties": {
+       "CatalogId": "761560768765",
+       "DatabaseInput": {
+        "Description": "database for csa dms",
+        "LocationUri": "s3://staged-csa-dms-vgcs-odl-prod/db/",
+        "Name": "staged_csa_dms"
+       }
+      },
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/staged_csa_dms-id"
+      }
+     },
+     "csaeventsdlqid20325DE3": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+       "QueueName": "csa-events-dlq",
+       "Tags": [
+        {
+         "Key": "BuiltBy",
+         "Value": "Pipelines"
+        },
+        {
+         "Key": "Component",
+         "Value": "ODL Common Infrastructure"
+        },
+        {
+         "Key": "ECS",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Name",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "Owner",
+         "Value": "ODL"
+        },
+        {
+         "Key": "ProductDomain",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Project",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "SemanticVersion",
+         "Value": "0.0.37"
+        },
+        {
+         "Key": "Version",
+         "Value": "37"
+        }
+       ]
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/csa-events-dlq-id/Resource"
+      }
+     },
+     "RoleForCSAStepsjson20A28394": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+       "AssumeRolePolicyDocument": {
+        "Statement": [
+         {
+          "Action": "sts:AssumeRole",
+          "Effect": "Allow",
+          "Principal": {
+           "Service": [
+            "lambda.amazonaws.com",
+            "states.eu-west-1.amazonaws.com"
+           ]
+          }
+         }
+        ],
+        "Version": "2012-10-17"
+       },
+       "ManagedPolicyArns": [
+        "arn:aws:iam::761560768765:policy/CustomPolicies/Services/Lakeformation/LakeformationDataAccess"
+       ],
+       "Path": "/DataSource/",
+       "Policies": [
+        {
+         "PolicyDocument": {
+          "Statement": [
+           {
+            "Action": [
+             "logs:CreateLogGroup",
+             "logs:CreateLogStream",
+             "logs:PutLogEvents"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+           },
+           {
+            "Action": [
+             "lambda:InvokeAsync",
+             "lambda:InvokeFunction"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:lambda:eu-west-1:761560768765:function:*"
+           },
+           {
+            "Action": [
+             "dynamodb:BatchWriteItem",
+             "dynamodb:CreateTable",
+             "dynamodb:DeleteItem",
+             "dynamodb:DescribeTable",
+             "dynamodb:GetItem",
+             "dynamodb:PartiQLDelete",
+             "dynamodb:PartiQLInsert",
+             "dynamodb:PartiQLSelect",
+             "dynamodb:PartiQLUpdate",
+             "dynamodb:PutItem",
+             "dynamodb:Query",
+             "dynamodb:Scan",
+             "dynamodb:UpdateItem"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:dynamodb:eu-west-1:761560768765:*"
+           },
+           {
+            "Action": [
+             "states:StartExecution",
+             "states:StartSyncExecution"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:states:eu-west-1:761560768765:stateMachine:*"
+           },
+           {
+            "Action": [
+             "glue:BatchCreatePartition",
+             "glue:BatchDeletePartition",
+             "glue:CreatePartition",
+             "glue:CreatePartitionIndex",
+             "glue:CreateTable",
+             "glue:DeletePartition",
+             "glue:DeletePartitionIndex",
+             "glue:GetTable",
+             "glue:GetTables",
+             "glue:UpdatePartition",
+             "glue:UpdateTable"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+             "arn:aws:glue:eu-west-1:761560768765:catalog",
+             "arn:aws:glue:eu-west-1:761560768765:database/staged_csa_dms",
+             "arn:aws:glue:eu-west-1:761560768765:table/staged_csa_dms/*"
+            ]
+           },
+           {
+            "Action": "athena:*",
+            "Effect": "Allow",
+            "Resource": "arn:aws:athena:eu-west-1:761560768765:workgroup/etljobs"
+           },
+           {
+            "Action": [
+             "events:DescribeRule",
+             "events:PutRule",
+             "events:PutTargets"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:events:eu-west-1:761560768765:rule/*"
+           },
+           {
+            "Action": [
+             "s3:GetBucketLocation",
+             "s3:GetObject",
+             "s3:PutObject"
+            ],
+            "Condition": {
+             "ForAnyValue:StringEquals": {
+              "aws:CalledVia": "athena.amazonaws.com"
+             }
+            },
+            "Effect": "Allow",
+            "Resource": [
+             "arn:aws:s3:::aws-athena-query-results-etljobs-761560768765-eu-west-1*",
+             "arn:aws:s3:::staged-csa-dms-vgcs-odl-prod",
+             "arn:aws:s3:::staged-csa-dms-vgcs-odl-prod/*"
+            ]
+           }
+          ],
+          "Version": "2012-10-17"
+         },
+         "PolicyName": "RoleForCSASteps-inline-policy"
+        }
+       ],
+       "RoleName": "RoleForCSASteps",
+       "Tags": [
+        {
+         "Key": "BuiltBy",
+         "Value": "Pipelines"
+        },
+        {
+         "Key": "Component",
+         "Value": "ODL Common Infrastructure"
+        },
+        {
+         "Key": "ECS",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Name",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "Owner",
+         "Value": "ODL"
+        },
+        {
+         "Key": "ProductDomain",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Project",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "SemanticVersion",
+         "Value": "0.0.37"
+        },
+        {
+         "Key": "Version",
+         "Value": "37"
+        }
+       ]
+      },
+      "DependsOn": [
+       "csaeventsdlqid20325DE3",
+       "stagedcsadmsid"
+      ],
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/RoleForCSASteps.json/Resource"
+      }
+     },
+     "stagedcsadmsvgcsodlprodDATALOCATIONPERMISSION": {
+      "Type": "AWS::LakeFormation::Resource",
+      "Properties": {
+       "ResourceArn": {
+        "Fn::GetAtt": [
+         "stagedcsadmsvgcsodlprodB6651931",
+         "Arn"
+        ]
+       },
+       "UseServiceLinkedRole": true
+      },
+      "DependsOn": [
+       "stagedcsadmsvgcsodlprodB6651931"
+      ],
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/staged-csa-dms-vgcs-odl-prod-DATALOCATIONPERMISSION"
+      }
+     },
+     "dblfpermissions": {
+      "Type": "AWS::LakeFormation::Permissions",
+      "Properties": {
+       "DataLakePrincipal": {
+        "DataLakePrincipalIdentifier": {
+         "Fn::GetAtt": [
+          "RoleForCSAStepsjson20A28394",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": {
+        "DatabaseResource": {
+         "CatalogId": "761560768765",
+         "Name": "staged_csa_dms"
+        }
+       },
+       "Permissions": [
+        "ALL"
+       ]
+      },
+      "DependsOn": [
+       "RoleForCSAStepsjson20A28394"
+      ],
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/db_lf_permissions"
+      }
+     },
+     "tablelfpermissions": {
+      "Type": "AWS::LakeFormation::Permissions",
+      "Properties": {
+       "DataLakePrincipal": {
+        "DataLakePrincipalIdentifier": {
+         "Fn::GetAtt": [
+          "RoleForCSAStepsjson20A28394",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": {
+        "TableResource": {
+         "CatalogId": "761560768765",
+         "DatabaseName": "staged_csa_dms",
+         "TableWildcard": {}
+        }
+       },
+       "Permissions": [
+        "ALTER",
+        "INSERT",
+        "DROP",
+        "DELETE",
+        "SELECT",
+        "DESCRIBE"
+       ]
+      },
+      "DependsOn": [
+       "RoleForCSAStepsjson20A28394"
+      ],
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/table_lf_permissions"
+      }
+     },
+     "RoleForCSACopyJobsjson9CD47CF1": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+       "AssumeRolePolicyDocument": {
+        "Statement": [
+         {
+          "Action": "sts:AssumeRole",
+          "Effect": "Allow",
+          "Principal": {
+           "Service": "glue.amazonaws.com"
+          }
+         }
+        ],
+        "Version": "2012-10-17"
+       },
+       "ManagedPolicyArns": [
+        "arn:aws:iam::761560768765:policy/CustomPolicies/Services/Lakeformation/LakeformationDataAccess"
+       ],
+       "Path": "/DataSource/",
+       "Policies": [
+        {
+         "PolicyDocument": {
+          "Statement": [
+           {
+            "Action": [
+             "athena:StartQueryExecution",
+             "athena:StopQueryExecution"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:athena:eu-west-1:761560768765:workgroup/etljobs"
+           },
+           {
+            "Action": [
+             "s3:GetBucketLocation",
+             "s3:GetObject"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::raw-dms-odl-prod/*"
+           },
+           {
+            "Action": "s3:ListBucket",
+            "Effect": "Allow",
+            "Resource": [
+             "arn:aws:s3:::raw-dms-odl-prod",
+             "arn:aws:s3:::staged-csa-dms-vgcs-odl-prod"
+            ]
+           },
+           {
+            "Action": "s3:GetObject",
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::raw-dms-odl-prod/SHARED_EUWEST1_PROD_CSA/*"
+           },
+           {
+            "Action": "s3:PutObject",
+            "Effect": "Allow",
+            "Resource": "arn:aws:s3:::staged-csa-dms-vgcs-odl-prod/db/csa/vehicle/*"
+           }
+          ],
+          "Version": "2012-10-17"
+         },
+         "PolicyName": "RoleForCSACopyJobs-inline-policy"
+        }
+       ],
+       "RoleName": "RoleForCSACopyJobs",
+       "Tags": [
+        {
+         "Key": "BuiltBy",
+         "Value": "Pipelines"
+        },
+        {
+         "Key": "Component",
+         "Value": "ODL Common Infrastructure"
+        },
+        {
+         "Key": "ECS",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Name",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "Owner",
+         "Value": "ODL"
+        },
+        {
+         "Key": "ProductDomain",
+         "Value": "ODL"
+        },
+        {
+         "Key": "Project",
+         "Value": "ds-csa"
+        },
+        {
+         "Key": "SemanticVersion",
+         "Value": "0.0.37"
+        },
+        {
+         "Key": "Version",
+         "Value": "37"
+        }
+       ]
+      },
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/RoleForCSACopyJobs.json/Resource"
+      }
+     },
+     "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+       "Analytics": "v2:deflate64:H4sIAAAAAAAA/02KSwrCQBBEz5L9pCUGAm7VA8RcQDqxo23mg9MziAxzd/NBcFWvXtUemgqqAt9SDrep1NxDmss1SQ3pGIeJgjqNdqOs7joSzP2MAXsUUvISSJdIkZbbClkxGkid06tbMiuNE43OGwzsLKTFk7joh/XTkjcsMk+Ss/pffpxV+wkPZ3c1HKBqiqcwlz7awIag2/ILQv1TMcwAAAA="
+      },
+      "Metadata": {
+       "aws:cdk:path": "ds-csa-infra-cdk-stack/CDKMetadata/Default"
+      }
+     }
+    },
+    "Outputs": {
+     "ExportsOutputFnGetAttRoleForCSAStepsjson20A28394ArnD02CE867": {
+      "Value": {
+       "Fn::GetAtt": [
+        "RoleForCSAStepsjson20A28394",
+        "Arn"
+       ]
+      },
+      "Export": {
+       "Name": "ds-csa-infra-cdk-stack:ExportsOutputFnGetAttRoleForCSAStepsjson20A28394ArnD02CE867"
+      }
+     }
+    },
+    "Parameters": {
+     "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+     }
+    },
+    "Rules": {
+     "CheckBootstrapVersion": {
+      "Assertions": [
+       {
+        "Assert": {
+         "Fn::Not": [
+          {
+           "Fn::Contains": [
+            [
+             "1",
+             "2",
+             "3",
+             "4",
+             "5"
+            ],
+            {
+             "Ref": "BootstrapVersion"
+            }
+           ]
+          }
+         ]
+        },
+        "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+       }
+      ]
+     }
+    }
+   }

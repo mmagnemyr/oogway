@@ -1,0 +1,62 @@
+"[:REPLACE_RESOURCE_NAME]": {
+    "Type": "AWS::S3::Bucket",
+    "Properties": {
+     "BucketEncryption": {
+      "ServerSideEncryptionConfiguration": [
+       {
+        "ServerSideEncryptionByDefault": {
+         "SSEAlgorithm": "AES256"
+        }
+       }
+      ]
+     },
+     "BucketName": "[:REPLACE_BUCKET_NAME]",
+     "PublicAccessBlockConfiguration": {
+      "BlockPublicAcls": true,
+      "BlockPublicPolicy": true,
+      "IgnorePublicAcls": true,
+      "RestrictPublicBuckets": true
+     },
+     "Tags": [
+      {
+       "Key": "BuiltBy",
+       "Value": "Pipelines"
+      },
+      {
+       "Key": "Component",
+       "Value": "ODL Common Infrastructure"
+      },
+      {
+       "Key": "ECS",
+       "Value": "ODL"
+      },
+      {
+       "Key": "Name",
+       "Value": "ds-csa"
+      },
+      {
+       "Key": "Owner",
+       "Value": "ODL"
+      },
+      {
+       "Key": "ProductDomain",
+       "Value": "ODL"
+      },
+      {
+       "Key": "Project",
+       "Value": "[:REPLACE_SOLUTION_NAME]"
+      },
+      {
+       "Key": "SemanticVersion",
+       "Value": "0.0.37"
+      },
+      {
+       "Key": "Version",
+       "Value": "37"
+      }
+     ]
+    },
+    "UpdateReplacePolicy": "Retain",
+    "DeletionPolicy": "Retain",
+    
+}

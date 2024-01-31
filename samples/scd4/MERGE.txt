@@ -1,0 +1,37 @@
+WITH
+  _md AS (
+   SELECT DISTINCT
+     vehicleplatformid
+   , softwareversion
+   , date_modified ValidFromDate
+   FROM
+     (
+      SELECT
+        vehicleplatformid
+      , softwareversion
+      , date_modified
+      FROM
+        odl_dwh_raw.scd4demo_source
+   )  tbl1
+) 
+, _final AS (
+   SELECT DISTINCT
+     d.wkvehicle
+   , hist.wkVehicle_history
+   , _md.ValidFromDate
+   FROM
+     ((_md
+   INNER JOIN odl_dwh_raw.dimVehicle d ON (_md.vehicleplatformid = d.vehicleplatformid))
+   INNER JOIN odl_dwh_raw.dimVehicle_history hist ON (d.softwareversion = hist.softwareversion))
+) 
+, _w AS (
+   SELECT
+     *
+   , COALESCE(lead(validfromdate) OVER (partition by wkVehicle ORDER BY validfromdate ASC), validfromdate)- interval  '1' second ValidToDate
+   , COALESCE(lead(wkvehicle_history) OVER (partition by wkVehicle ORDER BY validfromdate ASC), wkvehicle_history) next_wkvehicle_history
+   FROM
+     _final
+   ORDER BY validfromdate DESC
+) 
+SELECT
+ * from _w

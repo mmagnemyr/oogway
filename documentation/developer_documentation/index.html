@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            Oogway Developer Documentation - Index
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+              font-size: 18px;
+            }
+            .important {
+                font-weight: bold;
+                font-style: italic; 
+            }
+            .highlight {
+                font-weight: bold;
+                font-style: italic;      
+                background-color: yellow;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>Oogway Code Generator - The Developer Guide</h1>
+        <div class="divider"/>
+        <h2>Oogway Components</h2>
+        <div class="block1">
+            Oogway consists of 
+            <ul>
+                <li>
+                    Code Template Files
+                    <ul>
+                        <li>There are code templates for the VGCS ODL Team AWS Steps</li>
+                        <li>You can provide new code templates for other platforms.</li>
+                    </ul>
+                </li>
+                <li>
+                    Documentation Template Files, Located in \oogway\documentaion_templates\{orchestration language}
+                    <ul>
+                        <li>html templates</li>
+                        <li>the templates are used by oogway when building the documentaion for your use cases.</li>
+                    </ul>
+                </li>
+                <li>
+                    Excel Templates Files. Located in \oogway\templates\ </br>
+                    The vXXX in the file names mentioned below is refering to the version number the files has. If the current version is 117 then solution_vXXX.xlsx is actually solution_v117.xlsx</br>
+                    <ul>
+                        <li>oogway_sql_vXXX.xlsx</li>
+                        <ul>
+                            <li>This is where most of the oogway-variables are calculated. </li>
+                        </ul>
+                        <li>oogway_table_template_vXXX.xlsx</li>
+                        <ul>
+                            <li>This is where use case developers defines their table</li>
+                        </ul>
+                        <li>solution_vXXX.xlsx</li>
+                        <ul>
+                            <li>This is common meta data for the use cases that are shared for all tables.</li>
+                        </ul>
+                    </ul>
+                </li>
+                <li>
+                    Oogway Python Script. Located \oogway\code_generator
+                    <ul>
+                        oogway.py
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <h2>Variables</h2>
+        <h2>Templates</h2>
+        
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway. We hope you soon will be part of the Oogway developer team! Happy coding!</p>  
+            <p>Please keep this documentation updated.</p>
+        </p>
+        
+        
+       
+    </footer>
+
+</html>

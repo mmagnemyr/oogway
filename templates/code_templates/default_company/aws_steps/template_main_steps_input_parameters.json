@@ -1,0 +1,10 @@
+{
+  "NeedCallback":"False",
+  "process_hour":"",
+  "tag":"[:REPLACE_TAG]",
+  "parent_task_id":"[:REPLACE_PARENT_TASK_ID]",
+  "time":"2023-06-07T06:30:00Z",
+  "process_date":"2023-06-07",
+  "force_rerun":"True",
+  "task_group_name":"[:REPLACE_TASK_GROUP_NAME]"
+}   

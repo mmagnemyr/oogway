@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            Oogway Relase Notes - What has been done?
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+              font-size: 18px;
+            }
+            .important {
+                font-weight: bold;
+                font-style: italic; 
+            }
+            .highlight {
+                font-weight: bold;
+                font-style: italic;      
+                background-color: yellow;
+                    
+                    
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>Oogway Release Notes - What has been done?</h1>
+        <div class="divider"/>
+        <h2>Version 120</h2>
+        <h3>New Features</h3>
+        <ul>
+            <li>The action -a list has been added. You can print a list of your tables to the console.</li>
+        </ul>
+        <h3>Improvements</h3>
+        <ul>
+            <li>You can now use powershell commands in WSL. oogway.py will run in WSL.</li>
+            <ul>
+                <li>refresh excel files from the powershell add-in for WSL </li>
+            </ul>
+            <li>Better version management for older versions of the input files.</li>
+            <li>Deployment with AWS CDK has been improved and should now work with VGCS Pipelines.</li>
+            <li>Files in the folder oogway in your repo will not be added to git. (.gitignore)</li>
+        </ul>
+        <h3>Corrected Bugs</h3>
+        <ul>
+            <li>action upgrade -a upgrade and -a useupgrade</li>
+        </ul>
+
+        <div class="divider"></div>
+        
+        <h2>Version 115</h2>
+        <h3>New Features</h3>
+        <ul>
+            <li>Auto Orchestration feature is introduced</li>
+                <ul>
+                    <li>This means that dependencies between tables are detected and they will automatically be loaded in the correct order.</li>
+                </ul>
+                <li>Database dependencies are automatically added to the soultion.</li>
+                <ul>
+                    <li>You no longer need to enter the source databases you use in the solution.xlsx file.</li>
+                </ul>
+                <li>Incoming View</li>
+                <ul>
+                    <li>Incoming views are temporarily views. </li>
+                    <li>They will be created as step number 1 in the ETL pipeline and can be used while loading other tables</li>
+                    
+                </ul>
+                <li>Outgoing Views</li>
+                <ul>
+                    <li>Outgoing views are created for the end users.</li>
+                    <li>They will be created as the last step in the ETL Pipeline.</li>
+                    <li>They can use other tables in the Use Case or tables in other databases.</li>
+                    <li>You can not access an outgoing view during loading of other tables.</li>
+                </ul>
+        </ul>
+        <h3>Improvements</h3>
+        <ul>
+            
+           
+            <li>Better formatting of SQL code in the html documentation. </li>
+                <ul>
+                    <li>More readable code with new lines and indentation.</li>
+                    <li>There is also a html-table showing the tables used by any views you write.</li>
+                </ul>
+                <li>Better exception handling in oogway.py.. </li>
+                <ul>
+                    <li>
+                        Better but can always get better... so more will come!
+                    </li>
+                </ul>
+        </ul>
+
+        
+        <h3>Corrected Bugs</h3>
+            <ul>
+                <li>In previous version "Source Condition" in the "Columns" sheet was written like this:</li>
+                <ul>
+                    <li> '='[:date_yyyy_mm_dd]'</li>
+                    <ul><li>meaning that you would like to select rows where this column is equal to a date of format 
+                        <span class="highlight">date_yyyy_mm_dd.</span></li></ul>
+                        <li>However, this did not work because the pyhton lib <span     ="highlight">openpyxl</span> could not handle this and files got corrupted.</li>
+                        <li>New way of entering the same thing is to replace the '= to $eq</li>
+                        <li>So, <span class="highlight"> $eq'[:date_yyyy_mm_dd]'</span> is how you'd write it now.</li>
+                        <ul>
+                            <li><span class="highlight">$eq </span> will be translated to = </li>
+                            <li><span class="highlight">$gt</span> will be ></li>
+                            <li><span class="highlight">$lt</span> will be < </li>
+                        </ul>
+                    </ul>
+                
+               
+                <li>The "count of partition columns" does now work</li>
+            </ul>
+        <ul>
+         
+        </ul>
+    </body>
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway. We hope you soon will be part of the Oogway developer team! Happy coding!</p>  
+            <p><i>Yesterday is history, tomorrow is a mystery, today is a gift. That's why we call it the present!</i></p>
+        </p>
+        
+        
+       
+    </footer>
+</html>

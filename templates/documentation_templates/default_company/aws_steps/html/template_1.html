@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+        <title>
+            [:REPLACE_SOLUTION_NAME] - [:REPLACE_TARGET_TABLE_NAME]
+        </title>
+        <style>
+            body, pre {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+            }
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                width: 95%;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .block1 {
+                margin-left:20px;
+                text-align: left;
+                margin-bottom: 5px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:95%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+
+            .verticalTableHeader {
+                text-align:center;
+                white-space:nowrap;
+                g-origin:50% 50%;
+                -webkit-transform: rotate(280deg);
+                -moz-transform: rotate(280deg);
+                -ms-transform: rotate(280deg);
+                -o-transform: rotate(280deg);
+                transform: rotate(280deg);
+            
+            }
+            .verticalTableHeader p {
+                margin:0 -100% ;
+                display:inline-block;
+            }
+            .verticalTableHeader p:before{
+                content:'';
+                width:0;
+                padding-top:110%;/* takes width as reference, + 10% for faking some extra padding */
+                display:inline-block;
+                vertical-align:middle;
+            }
+            .small {
+              
+              font-size: 0.8em;
+              font-style: italic;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        
+        
+        <h1>Dimension Table - [:REPLACE_TARGET_TABLE_NAME]</h1>
+        <div class="divider"/>
+
+       
+            <h2>Description</h2>
+            <div class="block1">
+                <p>
+                [:REPLACE_TABLE_DESCRIPTION]
+                </p>
+            
+            </div>
+
+            <div style="[:REPLACE_SHOW_HTML_MINI_DIMENSION]">
+                <h3>Mini Dimension - Scd Type 4</h3>
+                <div class="block1">
+                    The mini dimension is used to keep the history of the columns marked with SCD-4 in the column list below.</br>
+                    Please note that the mini dimension will have its own wk-key and all fact tables refering to this dimensions should also have a reference to wk-key of the mini dimension.
+                </div>
+                
+                    [:REPLACE_HTML_TABLE_MINI_DIMENSION]
+            </div>
+
+            <h2>Columns</h2>
+            <div class="block1">
+                [:REPLACE_TARGET_TABLE_HTML]
+            </div>
+
+            <h2>Load Time Views</h2>
+            <div class="block1">
+                During the creation and load of the table one or two views are created temporarily.
+                If you have provided a source view in the table Excel file then this will be the "Source View"
+                Dimensional modelleing requires some extra columns in addition to what you have specified.
+                Those extra columns will be added to the Stage View. So the stage view will contain the columns you have specified 
+                together with the extra columns. 
+            </div>
+            <div style="[:REPLACE_SOURCE_VIEW_DISPLAY]">    
+                <h3>Source View</h3>
+                <div class="block1" >
+                    [:REPLACE_SOURCE_VIEW_DESCRIPTION]
+                </div>
+                
+                <div class="sql">
+                    <pre data-break-lines="100">
+                        <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                            [:REPLACE_SOURCE_VIEW]
+                        </code>
+                    </pre>
+                </div>
+                <div class="block1">
+                    <span class="small">Variable name: REPLACE_SOURCE_VIEW</span>
+                </div>
+
+                <h4>Test Business Key in Source View is Unique</h4>
+                <div class="block1">
+                    <p>
+                        The business key in the source view must be unique. You can use the below query to check if this is the case or not.
+                        If the query returns any rows then it is not and you need to update your source view to make sure that the key is unique.
+                    </p>
+                </div>
+                <div class="sql">
+                    <pre data-break-lines="100">
+                        <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                            [:REPLACE_TEST_SOURCE_BK_FORMATTED]
+                        </code>
+                    </pre>
+                </div>
+                <div class="block1">
+                    <span class="small">Variable name: REPLACE_TEST_SOURCE_BK</span>
+                </div>
+            </div>
+
+            <div style="[:REPLACE_SOURCE_TABLE_DISPLAY]">  
+                <h3>Source Table</h3>
+                <h4>Description</h4>
+                <div class="block1">
+                    [:REPLACE_SOURCE_VIEW_DESCRIPTION]
+                </div>
+                <div class="block1">
+                    <table>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <tr>
+                            <td>
+                                Database
+                            </td>
+                            <td>
+                                [:REPLACE_SOURCE_DATABASE]
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Table Name
+                            </td>
+                            <td>
+                                [:REPLACE_SOURCE_TABLE_NAME]
+                            </td>
+                        </tr>
+                        
+                        
+        
+                    </table>
+                </div>
+
+                <h3>Select statement used as source when populating the target table</h3>
+                <div class="sql">
+                    <pre data-break-lines="100">
+                        <code class="language-SQL">
+                            [:REPLACE_GENERATED_SOURCE_TABLE_SELECT]
+                        </code>
+                    </pre>
+                </div>
+                <div class="block1">
+                    <span class="small">Variable name: REPLACE_GENERATED_SOURCE_TABLE_SELECT</span>
+                </div>
+
+                <h3>Test Business Key in Source Table is unique</h3>
+                <div class="block1">
+                    <p>
+                        The business key in the source table must be unique. You can use the below sql to check if this is the case or not.
+                        If the query returns any rows then it is not and you need to create a source view to make sure that the key is unique.
+                    </p>
+                </div>
+                <div class="sql">
+                    <pre data-break-lines="100">
+                        <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                            [:REPLACE_TEST_SOURCE_BK_FORMATTED]
+                        </code>
+                    </pre>
+                </div>
+                <div class="block1">
+                    <span class="small">Variable name: REPLACE_TEST_SOURCE_BK</span>
+                </div>
+            </div>
+
+            <h3>Stage View</h3>
+            <div class="block1">
+                <ul>
+                    <li>
+                        The view is used by the MERGE command to populate the target table.
+                    </li>
+                    <li>
+                        uses either the source table or source view to select the columns you have provided. 
+                    </li>
+                    <li>
+                        Adds a few extra columns needed for a dimension.
+                    </li>
+                    <li>
+                        Creates the "wk"- or "warehouse key" for the table. The "wk" is an integer surrogate key for each member in the dimension.
+                    </li>
+                </ul>    
+            </div>            
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL">
+                        [:REPLACE_STAGE_VIEW_FORMATTED]
+                    </code>
+                </pre>
+            </div>
+            <div class="block1">
+                <span class="small">Variable name: REPLACE_STAGE_VIEW</span>
+            </div>
+
+            <h2>Initial Load</h2>
+            <h3>Create Table</h3>
+            <div class="block1">
+                During initial load the table will be created. Please note that you should not drop this table unless you are prepared to
+                repopulate all fact tables using this dimension as well. <br/>
+                The wk-keys are only random numbers and can not be regenerated.
+            </div>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                        [:REPLACE_CREATE_TARGET_TABLE]
+                    </code>
+                </pre>
+            </div>
+            <div class="block1">
+                <span class="small">Variable name: REPLACE_CREATE_TARGET_TABLE</span>
+            </div>
+
+            <h3>Insert Missing Member</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL">
+                        [:REPLACE_MISSING_MEMBER]
+                    </code>
+                </pre>
+            </div>
+            <div class="block1">
+                <span class="small">Variable name: REPLACE_MISSING_MEMBER</span>
+            </div>
+
+            
+        
+            
+        
+
+            
+            <h2>Incremental Loads</h2>
+            <h3>Populate Data</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL">
+                        [:REPLACE_POPULATE_DATA]
+                    </code>
+                </pre>
+            </div>
+            <div class="block1">
+                <span class="small">Variable name: REPLACE_POPULATE_DATA</span>
+            </div>
+           
+
+            <h3>Update IsCurrent to 0 for all members</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL">
+                        [:REPLACE_SET_ISCURRENT_0]
+                    </code>
+                </pre>
+            </div>
+            <div class="block1">
+                <span class="small">Variable name: REPLACE_SET_ISCURRENT_0</span>
+            </div>
+
+            <h3>Update IsCurrent to 1 for latest members.</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL">
+                        [:REPLACE_SET_ISCURRENT_1]
+                    </code>
+                </pre>
+            </div>
+            <div class="block1">
+                <span class="small">Variable name: REPLACE_SET_ISCURRENT_1</span>
+            </div>
+
+            <h2>Storage Information</h2>
+            <div class="block1">
+            <table>
+                <th>Key</th>
+                <th>Value</th>
+                <tr>
+                    <td>
+                        AWS Steps Name
+                    </td>
+                    <td>
+                        [:REPLACE_RESOURCE_IDENTIFIER]
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        AWS Athena Database
+                    </td>
+                    <td>
+                        [:REPLACE_DATABASE_NAME]
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        S3 Location
+                    </td>
+                    <td>
+                        [:REPLACE_TARGET_TABLE_S3_LOCATION]
+                    </td>
+                </tr>
+
+            </table>
+            </div>
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway.</p>
+            <span class="right">[:REPLACE_CURRENT_DATE]</span>
+        </p>
+        
+        <p><a href="mailto:vgcs-odl@volvo.com">vgcs-odl@volvo.com</a></p>
+        <p> This code and documentation was generated with Oogway Version: [:REPLACE_CODEGEN_VERSION]</p>
+    </footer>
+
+</html>

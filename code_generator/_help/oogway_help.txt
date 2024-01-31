@@ -1,0 +1,27 @@
+options
+ -h index 
+ -p path (required)
+   root path to your solution
+ --env prod|qa|cdk (default)
+ -a action
+   init
+       use -n to specify the name of your solution. This name will be written into the solution.xlsx file
+       initialze a new solution 
+   add
+       use -t to specify the name of the table you want to add
+   upgrade 
+       upgrades the excel files to the latest version
+   useupgrade
+       replaces files in your working directory with the recently upgraded files. 
+   backup
+       copies the files in the database folder to the backup folder
+   refresh
+       refreshes documentation and powershell_helper_scripts folder with latest content
+   build
+       generates code
+       generates html documentation
+       generates cdk project
+   list
+       lists all the tables in your solution   
+   scan
+       scans all repos and creates a report

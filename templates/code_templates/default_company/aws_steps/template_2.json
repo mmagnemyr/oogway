@@ -1,0 +1,443 @@
+{
+    "Comment": "Template #2, Created: [:REPLACE_CURRENT_DATE], Template Version:2023-12-11, Comment: UNLOAD TABLE [:REPLACE_TABLE_NAME]",
+    "StartAt": "reg_task_start",
+    "States": {
+      "reg_task_start": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_type": "AWS_STEPS_WORKFLOW",
+            "task_id.$": "$$.Execution.Id",
+            "set_running_task_to_failed": "True",
+            "process_date.$": "$$.Execution.Input.process_date",
+            "force_rerun.$": "$$.Execution.Input.force_rerun",
+            "action": "start",
+            "use_process_hour": "False",
+            "process_yesterday": "False",
+            "parent_task_id.$": "$.parent_task_id",
+            "task_group_name.$":"$$.Execution.Input.task_group_name",  
+            "task_name.$": "$$.StateMachine.Name"
+          }
+        },
+        "ResultPath": "$.reg_task_start",
+        "Next": "check_prev_task_status",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "AlreadyRunningError",
+              "NameError"
+            ],
+            "BackoffRate": 1,
+            "IntervalSeconds": 60,
+            "MaxAttempts": 30,
+            "Comment": "task_is_already_running"
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "reg_task_failure",
+            "ResultPath": "$.error-info"
+          }
+        ]
+      },
+
+      "check_prev_task_status": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$$.Execution.Input.force_rerun",
+            "StringEquals": "True",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "running",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "Failed",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "not found",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "Success",
+            "Next": "reg_task_success"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "already_completed",
+            "Next": "reg_task_success"
+          }
+        ]
+      },
+
+      "check_optional_input_parameters": {
+        "Type": "Choice",
+        "Choices": [
+              {
+                "Variable": "$$.Execution.Input.optional.do_create_table",
+                "IsPresent": true,
+                "Next": "set_sql"
+              }
+            ],  
+          "Default": "set_optional_parameter_default_values"
+      },
+
+      "set_optional_parameter_default_values": {
+        "Type": "Pass",
+        "Result": {
+          "do_create_table": true
+        },
+        "ResultPath": "$.optional",
+        "Next": "set_sql"
+      },
+      
+      "set_sql": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+            "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_replace_string_2",
+            "Payload": {
+                "variables": [
+                    {
+                        "key": "date_yyyymmdd",
+                        "value.$": "$.reg_task_start.Payload.time.date_yyyymmdd"
+                    },
+                    {
+                        "key": "date_yyyy_mm_dd",
+                        "value.$": "$.reg_task_start.Payload.time.date_yyyy_mm_dd"
+                    },
+
+                    {
+                      "key": "date_yyyy",
+                      "value.$": "$.reg_task_start.Payload.time.year"
+                  },
+                  {
+                      "key": "date_mm",
+                      "value.$": "$.reg_task_start.Payload.time.month"
+                  },
+
+                    {
+                        "key": "bucket",
+                        "value": "[:REPLACE_BUCKET_NAME]"
+                    },
+                    {
+                      "key": "prefix",
+                      "value": "[:REPLACE_PREFIX]"
+                    },
+                    
+                    {
+                      "key": "source_view",
+                      "value": "[:REPLACE_SOURCE_VIEW]"
+                    },
+                    {
+                      "key": "stage_view",
+                      "value": "[:REPLACE_STAGE_VIEW]"
+                    },
+
+                    {
+                        "key": "create_target_table",
+                        "value": "[:REPLACE_CREATE_TARGET_TABLE_EXTERNAL]"
+                    }, 
+                    
+                    {
+                        "key": "unload",
+                        "value": "[:REPLACE_UNLOAD_TABLE]"
+                    },
+                    {
+                        "key": "add_partition",
+                        "value": "[:REPLACE_ADD_PARTITION]"
+                    },
+
+                    {
+                      "key": "drop_stage_view",
+                      "value": "[:REPLACE_DROP_STAGE_VIEW]"
+                    },
+                    {
+                      "key": "drop_source_view",
+                      "value": "[:REPLACE_DROP_SOURCE_VIEW]"
+                    },
+                    {
+                      "key":"verify_partition_row_count",
+                      "value":"[:REPLACE_VERIFY_PARTITION_ROW_COUNT]"
+                    }
+                ]
+            }
+        },
+        "Next": "do_create_table",
+        "ResultPath": "$.set_sql"
+      },
+
+      "do_create_table": {
+        "Type": "Choice",
+        "Choices": [
+              {
+                "Variable": "$.optional.do_create_table",
+                "BooleanEquals": true,
+                "Next": "create_source_view"
+              }
+            ],  
+          "Default": "clear_partition_folder"
+      },
+
+      "create_source_view": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+            "QueryString.$": "$.set_sql.Payload.source_view",
+            "WorkGroup": "[:REPLACE_AWS_ATHENA_WORKGROUP]",
+            "ResultConfiguration": {
+                "OutputLocation": "[:REPLACE_ATHENA_OUTPUT_LOCATION]"
+            }
+        },
+        "ResultPath": "$.create_source_view",
+        "Next": "create_stage_view",
+      
+        "Catch": [
+            {
+                "ErrorEquals": [
+                    "States.All",
+                    "States.Runtime",
+                    "Athena.InvalidRequestException"
+                ],
+                "ResultPath": "$.error_info",
+                "Next": "reg_task_failure"
+            }
+        ]
+      },
+
+      "create_stage_view": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+            "QueryString.$": "$.set_sql.Payload.stage_view",
+            "WorkGroup": "[:REPLACE_AWS_ATHENA_WORKGROUP]",
+            "ResultConfiguration": {
+                "OutputLocation": "[:REPLACE_ATHENA_OUTPUT_LOCATION]"
+            }
+        },
+        "ResultPath": "$.create_stage_view",
+        "Next": "create_table",
+      
+        "Catch": [
+            {
+                "ErrorEquals": [
+                    "States.All",
+                    "States.Runtime",
+                    "Athena.InvalidRequestException"
+                ],
+                "ResultPath": "$.error_info",
+                "Next": "reg_task_failure"
+            }
+        ]
+      },
+
+      "create_table": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+            "QueryString.$": "$.set_sql.Payload.create_target_table",
+            "WorkGroup": "[:REPLACE_AWS_ATHENA_WORKGROUP]",
+            "ResultConfiguration": {
+                "OutputLocation": "[:REPLACE_ATHENA_OUTPUT_LOCATION]"
+            }
+        },
+        "ResultPath": "$.create_table",
+        "Next": "clear_partition_folder",
+        "Retry": [
+            {
+                "ErrorEquals": [
+                    "States.All"
+                ],
+                "BackoffRate": 2,
+                "IntervalSeconds": 30,
+                "MaxAttempts": 10
+            }
+        ],
+        "Catch": [
+            {
+                "ErrorEquals": [
+                    "States.All",
+                    "States.Runtime",
+                    "Athena.InvalidRequestException"
+                ],
+                "ResultPath": "$.error_info",
+                "Next": "reg_task_failure"
+            }
+        ]
+      },
+
+      "clear_partition_folder": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "ResultPath": "$.clear_partition_folder",
+        "Parameters": {
+            "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_delete_s3_folder:$LATEST",
+            "Payload": {
+            "bucketname.$": "$.set_sql.Payload.bucket",
+            "folder.$": "$.set_sql.Payload.prefix"
+            }
+      },
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error-info",
+          "Next": "reg_task_failure"
+        }
+      ],
+      "Next": "unload"
+      },
+
+      "unload": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+          "QueryString.$": "$.set_sql.Payload.unload",
+          "WorkGroup": "[:REPLACE_AWS_ATHENA_WORKGROUP]",
+          "ResultConfiguration": {
+            "OutputLocation": "[:REPLACE_ATHENA_OUTPUT_LOCATION]"
+          }
+        },
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "reg_task_failure"
+          }
+        ],
+        "Next": "add_partition",
+        "ResultPath": "$.unload"
+      },
+
+      "add_partition": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+          "QueryString.$": "$.set_sql.Payload.add_partition",
+          "WorkGroup": "[:REPLACE_AWS_ATHENA_WORKGROUP]",
+          "ResultConfiguration": {
+            "OutputLocation": "[:REPLACE_ATHENA_OUTPUT_LOCATION]"
+          }
+        },
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "reg_task_failure"
+          }
+        ],
+        "Next": "verify_partition_row_count",
+        "ResultPath": "$.add_partition"
+      },
+
+     "verify_partition_row_count": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+            "QueryString.$": "$.set_sql.Payload.verify_partition_row_count",
+            "WorkGroup": "[:REPLACE_AWS_ATHENA_WORKGROUP]",
+            "ResultConfiguration": {
+                "OutputLocation": "[:REPLACE_ATHENA_OUTPUT_LOCATION]"
+            }
+        },
+        "ResultPath": "$.verify_partition_row_count",
+        "Next": "get_query_result",
+        "Retry": [
+            {
+                "ErrorEquals": [
+                    "States.All"
+                ],
+                "BackoffRate": 2,
+                "IntervalSeconds": 30,
+                "MaxAttempts": 10
+            }
+        ],
+        "Catch": [
+            {
+                "ErrorEquals": [
+                    "States.All",
+                    "States.Runtime",
+                    "Athena.InvalidRequestException"
+                ],
+                "ResultPath": "$.error_info",
+                "Next": "reg_task_failure"
+            }
+        ]
+     },
+
+     "get_query_result": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:getQueryResults",
+        "Parameters": {
+          "MaxResults": 100,
+          "QueryExecutionId.$": "$.verify_partition_row_count.QueryExecution.QueryExecutionId"
+        },
+        "Next": "check_query_result",
+        "ResultSelector": {
+          "count.$": "$.ResultSet.Rows[1].Data[0].VarCharValue"
+        },
+        "ResultPath": "$.get_query_result"
+    },
+
+     "check_query_result": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.get_query_result.count",
+          "NumericLessThanEquals": 0,
+          "Next": "reg_task_failure"
+        }
+      ],
+        "Default": "reg_task_success"
+      },
+
+      "reg_task_success": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_id.$": "$$.Execution.Id",
+            "action": "success"
+          }
+        },
+        "Next": "Success"
+      },
+
+      "reg_task_failure": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_id.$": "$$.Execution.Id",
+            "action": "fail"
+          }
+        },
+        "Next": "Fail"
+      },
+
+      "Fail": {
+        "Type": "Fail"
+      },
+
+      "Success": {
+        "Type": "Succeed"
+      }
+    }
+  }

@@ -1,0 +1,12 @@
+{
+    "time":"",
+    "process_hour":"",
+    "force_rerun_subtask":"True",
+    "use_process_hour":"True",
+    "parent_task_id":"",
+    "process_date":"2023-01-01",
+    "end_date":"2023-06-01", 
+    "start_hour_hh":"00", 
+    "end_hour_hh":"23", 
+    "force_rerun":"True"
+}

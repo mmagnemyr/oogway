@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            [:REPLACE_SOLUTION_NAME] - Index
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+
+            .logo {
+                vertical-align:middle
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>[:REPLACE_SOLUTION_NAME] - [:REPLACE_SOLUTION_LONG_NAME]</h1>
+        <div class="divider"/>
+        
+        <h2>About [:REPLACE_SOLUTION_NAME] </h2>
+        <div class="block1">
+            <h3>Home Page</h3>
+            <a href='[:REPLACE_EXTERNAL_DOCUMENTATION_URL]'>[:REPLACE_EXTERNAL_DOCUMENTATION_URL]</a>
+
+            <h3>Oogway Code Generator</h3>
+            <img class="logo" src=".\images\logo.png" width="30px">
+            <span>AWS - Steps</span>
+
+            <h3>AWS Permissions</h3>
+            <div class="block1">
+                <table>
+                    <th>Key</th><th>value</th>
+                    <tr>
+                        <td>Role Prefix</td><td>[:REPLACE_AWS_ROLE_PREFIX]</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>DB Dependencies</td><td>[:REPLACE_DEPENDENCY_DATABASE_LIST]</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>DMA Purpose Codes</h3>
+            <div class="block1">
+                [:REPLACE_LIST_OF_PURPOSE_CODES]
+            </div>
+           
+            <h3>Main AWS Steps State Machine</h3>
+           
+            <a href='[:REPLACE_MAIN_STEPS_HTML_FILENAME]'> [:REPLACE_MAIN_STEPS_FILENAME] </a>
+        </div>
+
+        <h2>Use Case Tables</h2>
+        <div class="block1">
+            [:REPLACE_TABLE_OF_HTML_FILES]
+            <h3>Table Dependencies</h3>
+            [:REPLACE_DEP_TABLE]
+        </div>
+
+        <div style="[:REPLACE_USECASE_VIEWS_TABLE_DISPLAY]"> 
+            <h2>Outgoing Views</h2>
+            <div class="block1">
+                A list of views designed for end-user interaction.
+            </div>
+            <div class="block1">
+                [:REPLACE_CUSTOM_VIEWS_HTML_TABLE]
+            </div>
+        </div>
+
+        <div style="[:REPLACE_INCOMING_VIEWS_TABLE_DISPLAY]"> 
+            <h2>Incoming Views</h2>
+            <div class="block1">
+                A list of developer created views which purpose is to be used during load-time and then dropped.</br>
+                They can not use any table or tabels created by this use case. 
+            </div>
+            <div class="block1">
+                
+                [:REPLACE_INCOMING_VIEWS_HTML_TABLE]
+            </div>
+        </div>
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway.</p>
+            <span class="right">[:REPLACE_CURRENT_DATE]</span>
+        </p>
+        
+        <p><a href="mailto:vgcs-odl@volvo.com">vgcs-odl@volvo.com</a></p>
+        <p> This code and documentation was generated with Oogway Version: [:REPLACE_CODEGEN_VERSION]</p>
+    </footer>
+
+</html>

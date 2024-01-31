@@ -1,0 +1,173 @@
+"[:REPLACE_SOLUTION_NAME]stepfunctionrolejson[:REPLACE_RESOURCE_ID]": {
+    "Type": "AWS::IAM::Role",
+    "Properties": {
+     "AssumeRolePolicyDocument": {
+      "Statement": [
+       {
+        "Action": "sts:AssumeRole",
+        "Effect": "Allow",
+        "Principal": {
+         "Service": [
+          "lambda.amazonaws.com",
+          "states.[:REPLACE_AWS_REGION].amazonaws.com"
+         ]
+        }
+       }
+      ],
+      "Version": "2012-10-17"
+     },
+     "ManagedPolicyArns": [
+      "arn:aws:iam::[:REPLACE_AWS_ACCOUNT_NUMBER]:policy/CustomPolicies/Services/Lakeformation/LakeformationDataAccess"
+     ],
+     "Path": "/DataSource/",
+     "Policies": [
+      {
+       "PolicyDocument": {
+        "Statement": [
+         {
+          "Action": [
+           "logs:CreateLogGroup",
+           "logs:CreateLogStream",
+           "logs:PutLogEvents"
+          ],
+          "Effect": "Allow",
+          "Resource": "*"
+         },
+         {
+          "Action": [
+           "lambda:InvokeAsync",
+           "lambda:InvokeFunction"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:*"
+         },
+         {
+          "Action": [
+           "dynamodb:BatchWriteItem",
+           "dynamodb:CreateTable",
+           "dynamodb:DeleteItem",
+           "dynamodb:DescribeTable",
+           "dynamodb:GetItem",
+           "dynamodb:PartiQLDelete",
+           "dynamodb:PartiQLInsert",
+           "dynamodb:PartiQLSelect",
+           "dynamodb:PartiQLUpdate",
+           "dynamodb:PutItem",
+           "dynamodb:Query",
+           "dynamodb:Scan",
+           "dynamodb:UpdateItem"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:dynamodb:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:*"
+         },
+         {
+          "Action": [
+           "states:StartExecution",
+           "states:StartSyncExecution"
+          ],
+          "Effect": "Allow",
+          "Resource": [
+           "arn:aws:states:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:stateMachine:*",
+           "arn:aws:states:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:stateMachine:ra_main_steps"
+          ]
+         },
+         {
+          "Action": [
+           "glue:BatchCreatePartition",
+           "glue:BatchDeletePartition",
+           "glue:GetTable",
+           "glue:GetTables",
+           "glue:UpdateTable"
+          ],
+          "Effect": "Allow",
+          "Resource": [
+           "arn:aws:glue:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:catalog",
+           "arn:aws:glue:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:database/staged_ra",
+           "arn:aws:glue:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:database/[:REPLACE_SOLUTION_NAME]",
+           "arn:aws:glue:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:table/staged_ra/*",
+           "arn:aws:glue:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:table/[:REPLACE_SOLUTION_NAME]/*"
+          ]
+         },
+         {
+          "Action": [
+           "athena:GetQueryExecution",
+           "athena:StartQueryExecution",
+           "athena:StopQueryExecution"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:athena:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:workgroup/[:REPLACE_SOLUTION_NAME]"
+         },
+         {
+          "Action": [
+           "events:DescribeRule",
+           "events:PutRule",
+           "events:PutTargets"
+          ],
+          "Effect": "Allow",
+          "Resource": "arn:aws:events:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:rule/*"
+         },
+         {
+          "Action": [
+           "s3:GetBucketLocation",
+           "s3:GetObject",
+           "s3:PutObject"
+          ],
+          "Condition": {
+           "ForAnyValue:StringEquals": {
+            "aws:CalledVia": "athena.amazonaws.com"
+           }
+          },
+          "Effect": "Allow",
+          "Resource": [
+           "arn:aws:s3:::[:REPLACE_SOLUTION_NAME]-vgcs-odl-[:REPLACE_AWS_ENVIRONMENT]",
+           "arn:aws:s3:::[:REPLACE_SOLUTION_NAME]-vgcs-odl-[:REPLACE_AWS_ENVIRONMENT]*",
+           "arn:aws:s3:::[:REPLACE_SOLUTION_NAME]-vgcs-odl-[:REPLACE_AWS_ENVIRONMENT]/*"
+          ]
+         }
+        ],
+        "Version": "2012-10-17"
+       },
+       "PolicyName": "[:REPLACE_SOLUTION_NAME]-step-function-role-inline-policy"
+      }
+     ],
+     "RoleName": "[:REPLACE_SOLUTION_NAME]-step-function-role",
+     "Tags": [
+      {
+       "Key": "BuiltBy",
+       "Value": "Pipelines"
+      },
+      {
+       "Key": "Component",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "ECS",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Name",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Owner",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "ProductDomain",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Project",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "SemanticVersion",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Version",
+       "Value": "Unknown"
+      }
+     ]
+    }
+}

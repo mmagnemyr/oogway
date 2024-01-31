@@ -1,0 +1,84 @@
+{
+  "app": "python3 app.py",
+  "watch": {
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      ".venv/**",
+      "README.md",
+      "cdk*.json",
+      "requirements*.txt",
+      "source.bat",
+      "**/__init__.py",
+      "python/__pycache__",
+      "tests"
+    ]
+  },
+  "context": {
+    "DE_DEPLOY_ACCOUNT": "658537815488",
+    "DE_DEPLOY_REGION": "eu-west-1",
+    "DE_DEPLOY_ENVIRONMENT": "qa",
+    "COMMON":{
+      "NAME":"[:REPLACE_SOLUTION_NAME]",
+      "AWS_ACCOUNT": "${AWS_ACCOUNT}",
+      "AWS_REGION": "${AWS_REGION}",
+      "AWS_ENVIRONMENT": "${AWS_ENVIRONMENT}",
+      "DB_NAME": "[:REPLACE_SOLUTION_NAME]",
+      "TARGET_BUCKET":"[:REPLACE_SOLUTION_NAME]-vgcs-odl-${AWS_ENVIRONMENT}",
+      "DB_COMMENT": "",
+      "ATHENA_WORKGROUP":"[:REPLACE_SOLUTION_NAME]"
+    },
+    "STACK_INFRA":{
+      "STACK_NAME": "[:REPLACE_SOLUTION_NAME]-infra-stack",
+      "STACK_DESCRIPTION":"Infrastructure like roles and buckets ",
+      "STEPS_ROLE_PREFIX": "/UseCase/",
+      "STEPS_ROLE_NAME": "[:REPLACE_SOLUTION_NAME]-steps-role",
+      "STEPS_ROLE_DB_DEPENDENCIES": [[:REPLACE_ROLE_DB_DEPENDENCIES]],
+      "SQS_QUEUE_NAME":"[:REPLACE_SOLUTION_NAME]-sqs-events-dlq",
+      "WORKGROUP_NAME":"[:REPLACE_SOLUTION_NAME]",
+      "TARGET_BUCKET":"[:REPLACE_SOLUTION_NAME]-vgcs-odl-${AWS_ENVIRONMENT}",
+      "TARGET_PREFIX":"db"
+    },
+    "STACK_STEPS" :{
+      "STACK_NAME": "[:REPLACE_SOLUTION_NAME]-steps-stack",
+      "STACK_DESCRIPTION":"[:REPLACE_SOLUTION_NAME] steps job",
+      "STEPS_ROLE_PREFIX": "/UseCase/"
+    },
+    "SSO_ROLE": {
+      "USECASE_NAME": "[:REPLACE_SOLUTION_NAME]",
+      "STACK_NAME": "[:REPLACE_SOLUTION_NAME]-sso-role-stack",
+      "STACK_DESCRIPTION": "SSO Role to be assumed by uc0045 stakeholders.",
+      "BUCKET_NAME_PREFIX": "[:REPLACE_SOLUTION_NAME]-vgcs-odl-${AWS_ENVIRONMENT}",
+      "UNDERLYING_S3_ACCESS": true,
+      "SSO_ROLE_PATH": "UseCase",
+      "SSO_ROLE_NAME_SUFFIX": "sso-role",
+      "VPC_NAME_QA": [ "vpc-0adfb99d1f5d045e8"],
+      "VPC_NAME_PROD": "vpc-0366677b4cdfb7db3",
+      "SAML_PROVIDER_NAME": "VolvoGroup-AzureAD"
+    },
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:target-partitions": [
+      "aws",
+      "aws-cn"
+    ],
+    "@aws-cdk-containers/ecs-service-extensions:enableDefaultLogDriver": true,
+    "@aws-cdk/aws-ec2:uniqueImdsv2TemplateName": true,
+    "@aws-cdk/aws-ecs:arnFormatIncludesClusterName": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "@aws-cdk/core:validateSnapshotRemovalPolicy": true,
+    "@aws-cdk/aws-codepipeline:crossAccountKeyAliasStackSafeResourceName": true,
+    "@aws-cdk/aws-s3:createDefaultLoggingPolicy": true,
+    "@aws-cdk/aws-sns-subscriptions:restrictSqsDescryption": true,
+    "@aws-cdk/aws-apigateway:disableCloudWatchRole": true,
+    "@aws-cdk/core:enablePartitionLiterals": true,
+    "@aws-cdk/aws-events:eventsTargetQueueSameAccount": true,
+    "@aws-cdk/aws-iam:standardizedServicePrincipals": true,
+    "@aws-cdk/aws-ecs:disableExplicitDeploymentControllerForCircuitBreaker": true,
+    "@aws-cdk/aws-iam:importedRoleStackSafeDefaultPolicyName": true,
+    "@aws-cdk/aws-s3:serverAccessLogsUseBucketPolicy": true,
+    "@aws-cdk/aws-route53-patters:useCertificate": true,
+    "@aws-cdk/customresources:installLatestAwsSdkDefault": false
+  }
+}

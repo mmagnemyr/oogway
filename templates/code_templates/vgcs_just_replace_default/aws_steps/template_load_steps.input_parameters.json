@@ -1,0 +1,10 @@
+{
+    "NeedCallback":"False",
+    "time":"",
+    "process_hour":"",
+    "tag":"",
+    "parent_task_id":"arn:aws:states:eu-west-1:761560768765:execution:uc0047_jq_array_steps:30681d45-fd35-4127-b7d9-7c91ea6b77dc",
+    "process_date":"2023-06-07",
+    "force_rerun":"True",
+    "task_group_name":"uc0047_main_load_steps"
+}

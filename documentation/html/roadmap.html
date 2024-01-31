@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            Oogway Roadmap - The way forward
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+              font-size: 18px;
+            }
+            .important {
+                font-weight: bold;
+                font-style: italic; 
+            }
+            .highlight {
+                font-weight: bold;
+                font-style: italic;      
+                background-color: yellow;
+                    
+                    
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>Oogway Roadmap - The Way to the future</h1>
+        <div class="divider"/>
+        <h2>New Features</h2>
+        <ul>
+            <li>Enable disable "Auto Orchestration" Feature so that the user can turn it off</li>
+            <li>DONE: Present a list of used databases on the index.html page.</li>
+            <ul>
+                <li>Can also be used as the database dependency list which currently needs to be entered manually in the solution.xlsx file.</li>
+            </ul>
+            <li>DONE: Detect duplicate table names when building with in oogway.py</li>
+            <li>Detect <span class="highlight">circular references</span> among the tables.</li>
+            <ul>
+                <li>DONE: in- and outgoing views</li>
+                <li>REMAINS: the other tables</li>
+            </ul>
+        </ul>
+        
+        <h2>Bugs</h2>
+        <ul>
+            <li>DONE: Currently cells starting with '= does not work. Need to handle this in another way. Its about partitions for external tables.</li>
+            <li>Sometimes "shit happens"</li>
+            <ul>
+                <li>Continue to work on exception handling and write good error messages so that the user can understand what to do to correct the issue.</li>
+            </ul>
+            <li>Table names are case-sensitive when alaysing with sqlparser.py..</li>
+        </ul>
+    </body>
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway. We hope you soon will be part of the Oogway developer team! Happy coding!</p>  
+            <p><i>Yesterday is history, tomorrow is a mystery, today is a gift. That's why we call it the present!</i></p>
+        </p>
+        
+        
+       
+    </footer>
+</html>

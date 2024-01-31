@@ -1,0 +1,7 @@
+{
+	"oogway_templates_version":120,
+	"options": [
+		{"option":"--env", "default":"cdk"}
+	
+	]
+}

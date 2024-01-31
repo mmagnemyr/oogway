@@ -1,0 +1,4 @@
+https://stackedit.io/app#
+https://mermaidjs.github.io/
+https://www.freecodecamp.org/news/diagrams-as-code-with-mermaid-github-and-vs-code/
+https://www.princexml.com/doc/installing/

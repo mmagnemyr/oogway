@@ -1,0 +1,22 @@
+"VGCS - ODL - eu-west-1!Data source [!REPLACE_SOLUTION_NAME] ([!REPLACE_SOLUTION_NAME]_main_steps)": {
+    "alarm_helper_url": "https://vgcs-confluence.it.volvo.net/display/ODL/[!REPLACE_SOLUTION_NAME]+-+[!REPLACE_SOLUTION_NAME]+repository",
+    "domain_team": "VGCS - ODL",
+    "service": "_odl_database",
+    "vars": {
+       "commands_profile": "prod-odl",
+       "commands_region": "eu-west-1",
+       "commands_database": "odl_monitoring",
+       "commands_workgroup": "bsm",
+       "commands_table": "[!REPLACE_SOLUTION_NAME]_main_bsm_alarm_v",
+       "commands_value_field": "code",
+       "commands_timestamp_field": "last_state_created_time",
+       "commands_timestamp_age": "1440",
+       "commands_warning": "1,2,3",
+       "commands_critical": "4",
+       "environment": "prod",
+       "impact": "moderate",
+       "urgency": "medium"
+
+       },
+       "check_interval": 1800
+    },

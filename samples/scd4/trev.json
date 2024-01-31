@@ -1,0 +1,443 @@
+{
+  "Comment": "CREATED DATE: 2023-11-17, Comment: Trev raw-to-staged (ICEBERG Edition)",
+  "StartAt": "reg_task_start",
+  "States": {
+    "reg_task_start": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_reg_task_action",
+        "Payload": {
+          "task_type": "AWS_STEPS_WORKFLOW",
+          "task_id.$": "$$.Execution.Id",
+          "process_date.$": "$$.Execution.Input.process_date",
+          "process_hour.$": "$$.Execution.Input.process_hour",
+          "tag": "trev_new",
+          "force_rerun.$": "$$.Execution.Input.force_rerun",
+          "set_running_task_to_failed": "False",
+          "use_process_hour": "True",
+          "process_yesterday": "False",
+          "parent_task_id.$": "$$.Execution.Input.parent_task_id",
+          "action": "start",
+          "task_name.$": "$$.StateMachine.Name",
+          "task_group_name": "-"
+        }
+      },
+      "Next": "check_prev_task_status",
+      "ResultPath": "$.reg_task_start",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.All"
+          ],
+          "BackoffRate": 2,
+          "IntervalSeconds": 30,
+          "MaxAttempts": 10
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "reg_task_failure",
+          "ResultPath": "$.error-info"
+        }
+      ]
+    },
+    "check_prev_task_status": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.reg_task_start.Payload.continue",
+          "BooleanEquals": false,
+          "Next": "Success"
+        },
+        {
+          "Variable": "$$.Execution.Input.force_rerun",
+          "StringEquals": "True",
+          "Next": "check_optional_input_parameters"
+        },
+        {
+          "Variable": "$.reg_task_start.Payload.prev.status",
+          "StringEquals": "dns_stoprequest",
+          "Next": "check_optional_input_parameters"
+        },
+        {
+          "Variable": "$.reg_task_start.Payload.prev.status",
+          "StringEquals": "running",
+          "Next": "check_optional_input_parameters"
+        },
+        {
+          "Variable": "$.reg_task_start.Payload.prev.status",
+          "StringEquals": "Failed",
+          "Next": "check_optional_input_parameters"
+        },
+        {
+          "Variable": "$.reg_task_start.Payload.prev.status",
+          "StringEquals": "not found",
+          "Next": "check_optional_input_parameters"
+        },
+        {
+          "Variable": "$.reg_task_start.Payload.prev.status",
+          "StringEquals": "Success",
+          "Next": "Success"
+        },
+        {
+          "Variable": "$.reg_task_start.Payload.prev.status",
+          "StringEquals": "already_completed",
+          "Next": "Success"
+        }
+      ]
+    },
+    "check_optional_input_parameters": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$$.Execution.Input.optional.is_initial_load",
+          "IsPresent": true,
+          "Next": "set_sql"
+        }
+      ],
+      "Default": "set_optional_parameter_default_values"
+    },
+    "set_optional_parameter_default_values": {
+      "Type": "Pass",
+      "Result": {
+        "is_initial_load": false
+      },
+      "ResultPath": "$.optional",
+      "Next": "set_sql"
+    },
+    "set_sql": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_replace_string_2",
+        "Payload": {
+          "variables": [
+            {
+              "key": "date_yyyymmdd",
+              "value.$": "$.reg_task_start.Payload.time.date_yyyymmdd"
+            },
+            {
+              "key": "date_yyyy_mm_dd",
+              "value.$": "$.reg_task_start.Payload.time.date_yyyy_mm_dd"
+            },
+            {
+              "key": "hour",
+              "value.$": "$.reg_task_start.Payload.time.hour"
+            },
+            {
+              "key": "create_raw_table",
+              "value": "CREATE EXTERNAL  TABLE IF NOT EXISTS raw_tracking.raw_trackingevent_dec23(event string) PARTITIONED BY ( ttd string, tth string) ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe' STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat' LOCATION 's3://odl-raw.prod.shared.eu-west-1.prod.aws.vgthosting.net/te2odl'"
+            },
+            {
+              "key": "add_partition",
+              "value": "ALTER TABLE raw_tracking.raw_trackingevent_dec23 ADD IF NOT EXISTS PARTITION  (ttd= '[:date_yyyy_mm_dd]', tth='[:hour]') LOCATION 's3://odl-raw.prod.shared.eu-west-1.prod.aws.vgthosting.net/te2odl/[:date_yyyy_mm_dd]/[:hour]'"
+            },
+            {
+              "key": "create_iceberg_table",
+              "value": "CREATE TABLE IF NOT EXISTS staged_tracking.trackingevent_dec23 WITH (table_type = 'ICEBERG',  format = 'PARQUET',  location = 's3://staged-odl-prod/db/staged_trev/trackingevent/trackingevent_dec23/' ,  is_external = false,      partitioning = ARRAY['ttd','tth'],      vacuum_min_snapshots_to_keep = 10, vacuum_max_snapshot_age_seconds = 604800) AS SELECT documentid, platformvehicleidentifier, trackingtime_iso, triggertime_iso, gpstime_iso, triggertime_date, triggertime_hour, doc, trackingtime, triggertype, triggertime, position_gpstimestamp, datacontentname, ttd, tth FROM raw_tracking.raw_trackingevent_dec23_v"
+            },
+            {
+              "key": "populate_data",
+              "value": "INSERT INTO staged_tracking.trackingevent_dec23 (documentid, platformvehicleidentifier,trackingtime_iso, triggertime_iso, gpstime_iso, triggertime_date, triggertime_hour, doc, trackingtime, triggertype, triggertime, position_gpstimestamp, datacontentname, ttd, tth ) select documentid, platformvehicleidentifier, trackingtime_iso, triggertime_iso, gpstime_iso, triggertime_date, triggertime_hour, doc, trackingtime, triggertype, triggertime, position_gpstimestamp, datacontentname, ttd, tth FROM raw_tracking.raw_trackingevent_dec23_v where ttd='[:date_yyyy_mm_dd]' and tth='[:hour]'"
+            },
+            {
+              "key": "delete_data",
+              "value": "DELETE FROM staged_tracking.trackingevent_dec23 where ttd='[:date_yyyy_mm_dd]' and tth='[:hour]'"
+            },
+            {
+              "key": "vacuum_table",
+              "value": "VACUUM staged_tracking.trackingevent_dec23"
+            },
+            {
+              "key": "optimize_table",
+              "value": "OPTIMIZE staged_tracking.trackingevent_dec23 REWRITE DATA USING BIN_PACK WHERE ttd='[:date_yyyy_mm_dd]' and tth='[:hour]'"
+            },
+            {
+              "key": "create_view",
+              "value": "CREATE OR REPLACE VIEW  raw_tracking.raw_trackingevent_dec23_v  AS WITH tbl1 AS (SELECT event doc,  json_extract_scalar (event, '$.platformVehicleIdentifier') platformVehicleIdentifier,  json_extract_scalar (event, '$.trackingTime') trackingtime,  json_extract_scalar (event, '$.triggerType') triggerType, COALESCE( json_extract_scalar (event, '$.triggerTime'),  json_extract_scalar (event, '$.dataItems.position.gpsTimestamp')) triggerTime,  json_extract_scalar (event, '$.dataItems.position.gpsTimestamp') position_gpsTimestamp,  json_extract_scalar (event, '$.dataItems.lovVehicleDistance.meters') lovVehicleDistance_meters,  json_extract_scalar (event, '$.dataContentName') dataContentName, ttd, tth FROM raw_tracking.raw_trackingevent_dec23) SELECT lower ( to_hex ( md5 ( to_utf8 (doc)))) documentid,  date_format ( from_unixtime ((CAST(trackingtime AS bigint) / 1000)), '%Y-%m-%d %H:%i:%s') trackingtime_ISO,  date_format ( from_unixtime ((CAST(triggertime AS bigint) / 1000)), '%Y-%m-%d %H:%i:%s') triggertime_ISO,  date_format ( from_unixtime ((CAST(position_gpsTimestamp AS bigint) / 1000)), '%Y-%m-%d %H:%i:%s') gpstime_ISO,  date_format ( from_unixtime ((CAST(triggertime AS bigint) / 1000)), '%Y-%m-%d') triggertime_date,  date_format ( from_unixtime ((CAST(triggertime AS bigint) / 1000)), '%H') triggertime_hour, * FROM tbl1"
+            }
+          ]
+        }
+      },
+      "Next": "is_initial_load",
+      "ResultPath": "$.set_sql"
+    },
+    "is_initial_load": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.optional.is_initial_load",
+          "BooleanEquals": true,
+          "Next": "create_raw_table"
+        }
+      ],
+      "Default": "add_partition_to_raw"
+    },
+    "create_raw_table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.create_raw_table",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "create_raw_view",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "create_raw_view": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.create_view",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "create_iceberg_table",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "create_iceberg_table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.create_iceberg_table",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "add_partition_to_raw",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "add_partition_to_raw": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.add_partition",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "delete_data_in_iceberg_table",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "delete_data_in_iceberg_table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.delete_data",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "populate_data_in_iceberg_table",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.All"
+          ],
+          "BackoffRate": 2,
+          "IntervalSeconds": 30,
+          "MaxAttempts": 10
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "populate_data_in_iceberg_table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.populate_data",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "vacuum_table",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.All"
+          ],
+          "BackoffRate": 2,
+          "IntervalSeconds": 30,
+          "MaxAttempts": 10
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "vacuum_table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.vacuum_table",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "optimize_table",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.All"
+          ],
+          "BackoffRate": 2,
+          "IntervalSeconds": 30,
+          "MaxAttempts": 10
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "optimize_table": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.set_sql.Payload.optimize_table",
+        "WorkGroup": "uc0042",
+        "ResultConfiguration": {
+          "OutputLocation": "s3://staged-odl-prod/athena-query-result"
+        }
+      },
+      "ResultPath": "$.last_step_result",
+      "Next": "reg_task_success",
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "States.All"
+          ],
+          "BackoffRate": 2,
+          "IntervalSeconds": 30,
+          "MaxAttempts": 10
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.All",
+            "States.Runtime",
+            "Athena.InvalidRequestException"
+          ],
+          "ResultPath": "$.error_info",
+          "Next": "reg_task_failure"
+        }
+      ]
+    },
+    "reg_task_success": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_reg_task_action",
+        "Payload": {
+          "action": "success",
+          "task_id.$": "$$.Execution.Id"
+        }
+      },
+      "Next": "Success"
+    },
+    "reg_task_failure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_reg_task_action",
+        "Payload": {
+          "action": "fail",
+          "task_id.$": "$$.Execution.Id"
+        }
+      },
+      "Next": "Fail"
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Fail": {
+      "Type": "Fail"
+    }
+  }
+}

@@ -1,0 +1,323 @@
+{
+    "Comment": "Created: [:REPLACE_CURRENT_DATE], Template Version: 1.1, Comment: JobQueue is a generic state machine.",
+    "StartAt": "odl_reg_task_start",
+    "States": {
+      "odl_reg_task_start": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_type": "AWS_STEPS_WORKFLOW",
+            "task_id.$": "$$.Execution.Id",
+            "time.$": "$$.Execution.Input.time",
+            "action": "start",
+            "process_date.$": "$$.Execution.Input.process_date",
+            "tag.$": "$$.Execution.Input.smarn",
+            "set_running_task_to_failed": "True",
+            "use_process_hour": "False",
+            "process_yesterday": "False",
+            "parent_task_id.$": "$.parent_task_id",
+            "task_name.$": "$$.StateMachine.Name"
+          }
+        },
+        "ResultPath": "$.regtaskstart",
+        "Next": "check_prev_task_status",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "BackoffRate": 2,
+            "IntervalSeconds": 9,
+            "MaxAttempts": 2,
+            "Comment": "task_is_already_running"
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "odl_reg_task_failure",
+            "ResultPath": "$.error-info"
+          }
+        ]
+      },
+      "check_prev_task_status": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.regtaskstart.Payload.continue",
+            "BooleanEquals": false,
+            "Next": "Success"
+          },
+          {
+            "Variable": "$$.Execution.Input.force_rerun",
+            "StringEquals": "True",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.regtaskstart.Payload.prev.status",
+            "StringEquals": "dns_stoprequest",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.regtaskstart.Payload.prev.status",
+            "StringEquals": "running",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.regtaskstart.Payload.prev.status",
+            "StringEquals": "Failed",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.regtaskstart.Payload.prev.status",
+            "StringEquals": "not found",
+            "Next": "check_optional_input_parameters"
+          },
+          {
+            "Variable": "$.regtaskstart.Payload.prev.status",
+            "StringEquals": "Success",
+            "Next": "odl_reg_task_success"
+          },
+          {
+            "Variable": "$.regtaskstart.Payload.prev.status",
+            "StringEquals": "already_completed",
+            "Next": "odl_reg_task_success"
+          }
+        ]
+      },
+
+      "check_optional_input_parameters": {
+        "Type": "Choice",
+        "Choices": [
+
+
+              {
+                "Variable": "$.optional",
+                "IsPresent": true,
+                "Next": "check_input_parameters"
+              }
+
+
+
+        ],
+        "Default": "set_optional_parameter_default_values"
+      },
+
+      "set_optional_parameter_default_values": {
+        "Type": "Pass",
+        "Result": {
+          "empty": true
+
+        },
+        "ResultPath": "$.optional",
+        "Next": "check_input_parameters"
+      },
+
+      "check_input_parameters": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "And": [
+              {
+                "Variable": "$.hour.use_hour",
+                "IsPresent": true
+              },
+              {
+                "Variable": "$.hour.start_hour_hh",
+                "IsPresent": true
+              },
+              {
+                "Variable": "$.hour.end_hour_hh",
+                "IsPresent": true
+              }
+            ],
+            "Next": "get_date"
+          }
+        ],
+        "Default": "set_default_parameter_values"
+      },
+
+      "set_default_parameter_values": {
+        "Type": "Pass",
+        "Result": {
+          "use_hour": "False",
+          "end_hour_hh": "23",
+          "start_hour_hh": "00"
+        },
+        "ResultPath": "$.hour",
+        "Next": "get_date"
+      },
+
+      "get_date": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_get_date",
+          "Payload": {
+            "start_date_yyyy_mm_dd.$": "$.process_date",
+            "start_hour.$": "$.hour.start_hour_hh",
+            "end_hour.$": "$.hour.end_hour_hh",
+            "end_date_yyyy_mm_dd.$": "$.end_date_yyyy_mm_dd",
+            "use_hour.$": "$.hour.use_hour"
+          }
+        },
+        "ResultPath": "$.date",
+        "Next": "get_task_group_data"
+      },
+
+      "get_task_group_data": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "action": "get_task_group_count_per_status",
+            "task_group_name.$": "$$.Execution.Input.task_group_name",
+            "max_number_of_running_tasks.$": "$.max_number_of_running_tasks"
+          }
+        },
+        "ResultPath": "$.get_task_group_data",
+        "Next": "can_start_next",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "BackoffRate": 2,
+            "IntervalSeconds": 9,
+            "MaxAttempts": 2,
+            "Comment": "task_is_already_running"
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "odl_reg_task_failure",
+            "ResultPath": "$.error-info"
+          }
+        ]
+      },
+
+      "can_start_next": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.date.Payload.done",
+            "StringEquals": "True",
+            "Next": "check_number_of_running_tasks"
+          },
+          {
+            "Variable": "$.date.Payload.iterator",
+            "NumericEquals": 2900,
+            "Next": "odl_reg_task_success"
+          },
+          {
+            "Variable": "$.get_task_group_data.Payload.can_start_next",
+            "StringEquals": "True",
+            "Next": "jobrunner"
+          }
+        ],
+        "Default": "wait_before_check_again"
+      },
+
+      "check_number_of_running_tasks": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.get_task_group_data.Payload.number_of_failed",
+            "NumericGreaterThan": 0,
+            "Next": "odl_reg_task_failure"
+          },
+          {
+            "Variable": "$.get_task_group_data.Payload.number_of_running",
+            "NumericGreaterThan": 0,
+            "Next": "wait_before_check_again"
+          }
+        ],
+        "Default": "odl_reg_task_success"
+      },
+      "jobrunner": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::states:startExecution",
+        "Parameters": {
+          "StateMachineArn.$": "$.smarn",
+          "Input": {
+            "NeedCallback": "False",
+            "force_rerun.$": "$$.Execution.Input.force_rerun_subtask",
+            "time": "",
+            "parent_task_id.$": "$$.Execution.Id",
+            "process_date.$": "$.date.Payload.start_date_yyyy_mm_dd",
+            "process_hour.$": "$.date.Payload.start_hour_hh",
+            "optional.$":"$.optional",
+            "tag": "",
+            "task_group_name.$": "$$.Execution.Input.task_group_name"
+          }
+        },
+        "ResultPath": "$.jobrunner",
+        "Next": "get_date_next"
+      },
+      "get_date_next": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_get_date",
+          "Payload": {
+            "start_date_yyyy_mm_dd.$": "$.date.Payload.nextday_yyyy_mm_dd",
+            "end_date_yyyy_mm_dd.$": "$.end_date_yyyy_mm_dd",
+            "start_hour.$": "$.date.Payload.next_hour_hh",
+            "end_hour.$": "$.hour.end_hour_hh",
+            "use_hour.$": "$.hour.use_hour",
+            "iterator.$": "$.date.Payload.iterator"
+          }
+        },
+        "ResultPath": "$.date",
+        "Next": "wait"
+      },
+      "wait_before_check_again": {
+        "Type": "Wait",
+        "SecondsPath": "$.wait_in_seconds",
+        "Next": "get_task_group_data"
+      },
+      "wait": {
+        "Type": "Wait",
+        "Seconds": 4,
+        "Next": "get_task_group_data"
+      },
+      "odl_reg_task_success": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_id.$": "$$.Execution.Id",
+            "action": "success"
+          }
+        },
+        "Next": "Success"
+      },
+      "odl_reg_task_failure": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_id.$": "$$.Execution.Id",
+            "action": "fail"
+          }
+        },
+        "Next": "Fail"
+      },
+      "Fail": {
+        "Type": "Fail"
+      },
+      "Success": {
+        "Type": "Succeed"
+      }
+    }
+  }

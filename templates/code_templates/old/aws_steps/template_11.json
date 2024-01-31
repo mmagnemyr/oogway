@@ -1,0 +1,400 @@
+{
+    "Comment": "Template #11: Load Data Vault Sat (WIP)",
+    "StartAt": "reg_task_start",
+    "States": {
+
+      "reg_task_start": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_type": "AWS_STEPS_WORKFLOW",
+            "task_id.$": "$$.Execution.Id",
+            "time.$": "$$.Execution.Input.time",
+            "tag.$": "$$.Execution.Input.tag",
+            "force_rerun.$": "$$.Execution.Input.force_rerun",
+            "set_running_task_to_failed": "False",
+            "use_process_hour": "False",
+            "process_yesterday": "False",
+            "parent_task_id.$": "$$.Execution.Input.parent_task_id",
+            "action": "start",
+            "task_name.$": "$$.StateMachine.Name",
+            "task_group_name": "$$.Execution.Input.task_group_name"
+          }
+        },
+        "Next": "check_prev_task_status",
+        "ResultPath": "$.reg_task_start",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.All"
+            ],
+            "BackoffRate": 2,
+            "IntervalSeconds": 30,
+            "MaxAttempts": 10
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "reg_task_failure",
+            "ResultPath": "$.error-info"
+          }
+        ]
+      },
+      
+      "check_prev_task_status": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.reg_task_start.Payload.continue",
+            "BooleanEquals": false,
+            "Next": "Success"
+          },
+          {
+            "Variable": "$$.Execution.Input.force_rerun",
+            "StringEquals": "True",
+            "Next": "set_sql"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "dns_stoprequest",
+            "Next": "set_sql"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "running",
+            "Next": "set_sql"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "Failed",
+            "Next": "set_sql"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "not found",
+            "Next": "set_sql"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "Success",
+            "Next": "Success"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "already_completed",
+            "Next": "Success"
+          }
+        ]
+      },
+
+      "set_sql": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+            "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_replace_string_2",
+            "Payload": {
+                "variables": [
+                    {
+                        "key": "date_yyyymmdd",
+                        "value.$": "$.reg_task_start.Payload.time.date_yyyymmdd"
+                    },
+                    {
+                        "key": "date_yyyy_mm_dd",
+                        "value.$": "$.reg_task_start.Payload.time.date_yyyy_mm_dd"
+                    },
+                    {
+                        "key": "date_yyyy",
+                        "value.$": "$.reg_task_start.Payload.time.year"
+                    },
+                    {
+                        "key": "date_mm",
+                        "value.$": "$.reg_task_start.Payload.time.month"
+                    },
+
+                    {
+                        "key": "database",
+                        "value": "[:REPLACE_DATABASE_NAME]"
+                    },
+
+                    {
+                        "key": "table",
+                        "value": "[:REPLACE_TABLE_NAME]"
+                    },
+
+                    {
+                        "key": "drop_table",
+                        "value": "[:REPLACE_DROP_TABLE]"
+                    },
+                    {
+                        "key": "source_view",
+                        "value": "[:REPLACE_SOURCE_VIEW]"
+                    },
+                    {
+                        "key": "stage_view",
+                        "value": "[:REPLACE_STAGE_VIEW]"
+                    },
+                    {
+                        "key": "create_target_table",
+                        "value": "[:REPLACE_CREATE_TARGET_TABLE]"
+                    },
+                    {
+                        "key": "insert_missing_member",
+                        "value": "[:REPLACE_MISSING_MEMBER]"
+                    },
+                    {
+                        "key": "populate_data",
+                        "value": "[:REPLACE_POPULATE_DATA]"
+                    },
+                    {
+                        "key": "populate_data_incrementaly",
+                        "value": "[:REPLACE_POPULATE_DATA_INCREMENTALY]"
+                    },
+                    {
+                        "key": "update_iscurrent_0",
+                        "value": "[:REPLACE_SET_ISCURRENT_0]"
+                    },
+                    {
+                        "key": "update_iscurrent_1",
+                        "value": "[:REPLACE_SET_ISCURRENT_1]"
+                    },
+                    {
+                        "key": "drop_stage_view",
+                        "value": "[:REPLACE_DROP_STAGE_VIEW]"
+                    },
+                    {
+                        "key": "drop_source_view",
+                        "value": "[:REPLACE_DROP_SOURCE_VIEW]"
+                    },
+                    {
+                        "key": "optimize_table",
+                        "value": "[:REPLACE_OPTIMIZE_TABLE]"
+                    },
+                    {
+                        "key": "verify_wk_unique",
+                        "value": "[:REPLACE_VERIFY_WK_UNIQUE]"
+                    },
+                    {
+                        "key": "verify_wk_not_null",
+                        "value": "[:REPLACE_VERIFY_WK_NOT_NULL]"
+                    },
+                    {
+                        "key": "verify_bk_unique",
+                        "value": "[:REPLACE_VERIFY_BK_UNIQUE]"
+                    }
+                ]
+            }
+        },
+        "Next": "is_initial_load",
+        "ResultPath": "$.set_sql"
+      },
+      
+      "replace_string": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_replace_string",
+          "Payload": {
+            "string_list": {
+              "replace": [
+                {
+                  "replace_this": "[:date_yyyy_mm_dd]",
+                  "replace_with.$": "$.reg_task_start.Payload.time.date_yyyymmdd"
+                },
+                {
+                  "replace_this": "[:date_yyyy_mm_dd]",
+                  "replace_with.$": "$.reg_task_start.Payload.time.date_yyyy_mm_dd"
+                }
+              ],
+              "strings": [
+                {
+                  "name": "initial_load",
+                  "string.$": "$.set_sql.Payload.initial_load"
+                },
+                {
+                  "name": "incremental_load",
+                  "string.$": "$.set_sql.Payload.incremental_load"
+                },
+                {
+                  "name": "create_table",
+                  "string.$": "$.set_sql.Payload.create_table"
+                },
+                {
+                  "name": "current_view",
+                  "string.$": "$.set_sql.Payload.current_view"
+                },
+                {
+                  "name": "stage_view",
+                  "string.$": "$.set_sql.Payload.stage_view"
+                },
+                {
+                  "name": "drop_stage_view",
+                  "string.$": "$.set_sql.Payload.drop_stage_view"
+                },
+                {
+                  "name": "s3_prefix",
+                  "string.$": "$.set_sql.Payload.s3_prefix"
+                }
+              ]
+            }
+          }
+        },
+        "Next": "create_stage_view",
+        "ResultPath": "$.set_sql"
+      },
+
+      "create_stage_view": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::states:startExecution.sync",
+        "Parameters": {
+          "StateMachineArn": "arn:aws:states:eu-west-1:761560768765:stateMachine:dv_stage_view_create_vr_tea2_nodes_v_steps",
+          "Input": {
+            "NeedCallback": "False",
+            "force_rerun.$": "$$.Execution.Input.force_rerun",
+            "time.$": "$$.Execution.Input.time",
+            "parent_task_id.$": "$$.Execution.Input.parent_task_id",
+            "process_date": "",
+            "process_hour": "",
+            "tag": ""
+          }
+        },
+        "ResultPath": "$.create_stage_view",
+        "Next": "incremental_load",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "AlreadyRunningError",
+              "NameError"
+            ],
+            "BackoffRate": 1,
+            "IntervalSeconds": 60,
+            "MaxAttempts": 30,
+            "Comment": "task_is_already_running"
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "AlreadyRunningError",
+              "NameError"
+            ],
+            "Next": "reg_task_failure"
+          },
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "reg_task_failure"
+          }
+        ]
+      },
+      
+      "incremental_load": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+          "QueryString.$": "$.set_sql.Payload.incremental_load",
+          "WorkGroup": "primary",
+          "ResultConfiguration": {
+            "OutputLocation": "s3://dwh-raw-vgcs-odl-prod/query_output"
+          }
+        },
+        "ResultPath": "$.incremental_load",
+        "Next": "create_current_view",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.All"
+            ],
+            "BackoffRate": 2,
+            "IntervalSeconds": 30,
+            "MaxAttempts": 10
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.All",
+              "States.Runtime",
+              "Athena.InvalidRequestException"
+            ],
+            "ResultPath": "$.error_info",
+            "Next": "reg_task_failure"
+          }
+        ]
+      },
+
+      "create_current_view": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+        "Parameters": {
+          "QueryString.$": "$.set_sql.Payload.current_view",
+          "WorkGroup": "primary",
+          "ResultConfiguration": {
+            "OutputLocation": "s3://dwh-raw-vgcs-odl-prod/query_output"
+          }
+        },
+        "ResultPath": "$.create_current_view",
+        "Next": "reg_task_success",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.All"
+            ],
+            "BackoffRate": 2,
+            "IntervalSeconds": 30,
+            "MaxAttempts": 10
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.All",
+              "States.Runtime",
+              "Athena.InvalidRequestException"
+            ],
+            "ResultPath": "$.error_info",
+            "Next": "reg_task_failure"
+          }
+        ]
+      },
+
+      "reg_task_success": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_reg_task_action",
+          "Payload": {
+            "action": "success",
+            "task_id.$": "$$.Execution.Id"
+          }
+        },
+        "Next": "Success"
+      },
+
+      "reg_task_failure": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:eu-west-1:761560768765:function:odl_reg_task_action",
+          "Payload": {
+            "action": "fail",
+            "task_id.$": "$$.Execution.Id"
+          }
+        },
+        "Next": "Fail"
+      },
+
+      "Success": {
+        "Type": "Succeed"
+      },
+
+      "Fail": {
+        "Type": "Fail"
+      }
+    }
+  }

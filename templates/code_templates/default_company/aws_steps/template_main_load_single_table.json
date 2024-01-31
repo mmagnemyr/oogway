@@ -1,0 +1,188 @@
+{
+    "Comment": "Created: [:REPLACE_CURRENT_DATE], Template version:2023-09-26-1.2, Comment: Main Load Single Table for solution [:REPLACE_SOLUTION_NAME]",
+    "StartAt": "reg_task_start",
+    "States": {
+     
+      "reg_task_start": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "task_type": "AWS_STEPS_WORKFLOW",
+            "task_id.$": "$$.Execution.Id",
+            "time.$": "$$.Execution.Input.time",
+            "process_date.$": "$$.Execution.Input.process_date",
+            "tag.$": "$$.Execution.Input.tag",
+            "force_rerun.$": "$$.Execution.Input.force_rerun",
+            "set_running_task_to_failed": "False",
+            "use_process_hour": "False",
+            "process_yesterday": "False",
+            "parent_task_id.$": "$$.Execution.Input.parent_task_id",
+            "action": "start",
+            "task_name.$": "$$.StateMachine.Name"
+          }
+        },
+        "Next": "check_prev_task_status",
+        "ResultPath": "$.reg_task_start",
+        "Retry": [
+          {
+            "ErrorEquals": [
+              "States.All"
+            ],
+            "BackoffRate": 2,
+            "IntervalSeconds": 30,
+            "MaxAttempts": 10
+          }
+        ],
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "Next": "reg_task_failure",
+            "ResultPath": "$.error-info"
+          }
+        ]
+      },
+     
+      "check_prev_task_status": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Variable": "$.reg_task_start.Payload.continue",
+            "BooleanEquals": false,
+            "Next": "Success"
+          },
+          {
+            "Variable": "$$.Execution.Input.force_rerun",
+            "StringEquals": "True",
+            "Next": "datasource_dependencies"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "dns_stoprequest",
+            "Next": "datasource_dependencies"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "running",
+            "Next": "datasource_dependencies"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "Failed",
+            "Next": "datasource_dependencies"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "not found",
+            "Next": "datasource_dependencies"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "Success",
+            "Next": "Success"
+          },
+          {
+            "Variable": "$.reg_task_start.Payload.prev.status",
+            "StringEquals": "already_completed",
+            "Next": "Success"
+          }
+        ]
+      },
+
+      "datasource_dependencies": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::states:startExecution.sync",
+        "Parameters": {
+          "StateMachineArn": "arn:aws:states:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:stateMachine:odl_load_datasources_steps",
+          "Input": {
+            "NeedCallback": false,
+            "parent_task_id.$": "$$.Execution.Id",
+            "process_date.$": "$.reg_task_start.Payload.time.date_yyyy_mm_dd",
+            "force_rerun": "False",
+            "environment": "[:REPLACE_AWS_ENVIRONMENT_UPPERCASE]",
+            "time.$": "$$.Execution.Input.time",
+            "usecase": "[:REPLACE_SOLUTION_NAME]"
+          }
+        },
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.error-info",
+            "Next": "reg_task_failure"
+          }
+        ],
+        "ResultPath": "$.datasource_dependencies",
+        "Next": "load_table"
+      },
+      
+      "load_table": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::states:startExecution.sync",
+        "Parameters": {
+          "StateMachineArn": "arn:aws:states:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:stateMachine:[:REPLACE_SOLUTION_NAME]_jobqueue_array_steps",
+          "Input": {
+            "NeedCallback": "False",
+            "force_rerun.$": "$$.Execution.Input.force_rerun",
+            "force_rerun_subtask": "True",
+            "max_number_of_running_tasks": "10",
+            "parent_task_id.$": "$$.Execution.Id",
+            "process_date.$": "$.reg_task_start.Payload.time.yesterday_yyyy_mm_dd",
+            "process_hour": "",
+            "array_of_sm_to_run.$": "$.set_dim_array.Payload.array",
+            "tag": "[:REPLACE_USECASE]_load_dimensions",
+            "task_group_name.$": "$$.StateMachine.Name"
+          }
+        },
+        "ResultPath": "$.start_next_job",
+        "Next": "load_facts",
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"
+            ],
+            "ResultPath": "$.error-info",
+            "Next": "reg_task_failure"
+          }
+        ]
+      },
+
+     "reg_task_success": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "action": "success",
+            "task_id.$": "$$.Execution.Id"
+          }
+        },
+        "Next": "Success"
+      },
+      
+      "reg_task_failure": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::lambda:invoke",
+        "Parameters": {
+          "FunctionName": "arn:aws:lambda:[:REPLACE_AWS_REGION]:[:REPLACE_AWS_ACCOUNT_NUMBER]:function:odl_reg_task_action",
+          "Payload": {
+            "action": "fail",
+            "task_id.$": "$$.Execution.Id"
+          }
+        },
+        "Next": "Fail"
+      },
+      
+      "Success": {
+        "Type": "Succeed"
+      },
+
+      "Fail": {
+        "Type": "Fail"
+      }
+    }
+  }

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            [:REPLACE_SOLUTION_NAME]
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+            }
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+
+            .verticalTableHeader {
+                text-align:center;
+                white-space:nowrap;
+                g-origin:50% 50%;
+                -webkit-transform: rotate(280deg);
+                -moz-transform: rotate(280deg);
+                -ms-transform: rotate(280deg);
+                -o-transform: rotate(280deg);
+                transform: rotate(280deg);
+            
+            }
+            .verticalTableHeader p {
+                margin:0 -100% ;
+                display:inline-block;
+            }
+            .verticalTableHeader p:before{
+                content:'';
+                width:0;
+                padding-top:110%;/* takes width as reference, + 10% for faking some extra padding */
+                display:inline-block;
+                vertical-align:middle;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>[:REPLACE_SOLUTION_LONG_NAME] - [:REPLACE_TARGET_TABLE_NAME]</h1>
+        <div class="divider"/>
+
+        <h2>Fact Table (External Table)</h2>
+            <h3>Description</h3>
+            <div class="block1">
+                [:REPLACE_TABLE_DESCRIPTION]
+            
+           
+            </div>
+
+            
+
+            <h3>Columns</h3>
+            <div class="block1">
+                [:REPLACE_TARGET_TABLE_HTML]
+            </div>
+
+            <h3>Dimensions and Join Conditions</h3>
+            <div class="block1">
+                [:REPLACE_DIMENSIONS_JOIN_CONDITION_TABLE]
+            </div>
+
+            <h3>Create Table</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                        [:REPLACE_CREATE_TARGET_TABLE_EXTERNAL]
+                    </code>
+                </pre>
+            </div>
+        
+            <div style="[:REPLACE_SOURCE_VIEW_DISPLAY]">      
+                <h2>Source View</h2>
+                <div class="block1" >
+                    <pre>
+                        [:REPLACE_SOURCE_VIEW_DESCRIPTION]
+                    </pre>
+                </div>
+                <h3>Create View</h3>
+                <div class="sql">
+                    <pre data-break-lines="100">
+                        <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                            [:REPLACE_SOURCE_VIEW]
+                        </code>
+                    </pre>
+                </div>
+            </div>
+
+            <div style="[:REPLACE_SOURCE_TABLE_DISPLAY]">  
+                <h2>Source Table</h2>
+                <h3>Description</h3>
+                <div class="block1">
+                    [:REPLACE_SOURCE_VIEW_DESCRIPTION]
+                </div>
+                <div class="block1">
+                    <table>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <tr>
+                            <td>
+                                Database
+                            </td>
+                            <td>
+                                [:REPLACE_SOURCE_DATABASE]
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Table Name
+                            </td>
+                            <td>
+                                [:REPLACE_SOURCE_TABLE_NAME]
+                            </td>
+                        </tr>
+        
+                        
+        
+                    </table>
+                </div>
+            </div>
+        
+
+            <h2>Stage View</h2>
+            <h3>Create View</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                        [:REPLACE_STAGE_VIEW]
+                    </code>
+                </pre>
+            </div>
+    
+            <h2>Populate Data</h2>
+            <h3>Unload - Sql</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                        [:REPLACE_UNLOAD_TABLE]
+                    </code>
+                </pre>
+            </div>
+
+            <h3>Add Partition - Sql</h3>
+            <div class="sql">
+                <pre data-break-lines="100">
+                    <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                        [:REPLACE_ADD_TARGET_PARTITION]
+                    </code>
+                </pre>
+            </div>
+
+            <h2>Settings</h2>
+            <div class="block1">
+            <table>
+                <th>Key</th>
+                <th>Value</th>
+                <tr>
+                    <td>
+                        AWS Steps Name
+                    </td>
+                    <td>
+                        [:REPLACE_RESOURCE_IDENTIFIER]
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        AWS Athena Database
+                    </td>
+                    <td>
+                        [:REPLACE_DATABASE_NAME]
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        S3 Location
+                    </td>
+                    <td>
+                        [:REPLACE_TARGET_TABLE_S3_LOCATION]
+                    </td>
+                </tr>
+
+            </table>
+            </div>
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>VGCS ODL</p>  
+            <span class="right">[:REPLACE_CURRENT_DATE]</span>
+        </p>
+
+        <p><a href="mailto:vgcs-odl@volvo.com">vgcs-odl@volvo.com</a></p>
+        <p> This code and documentation was generated with Excel Template Version: [:REPLACE_CODEGEN_VERSION]</p>
+    </footer>
+
+</html>

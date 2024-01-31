@@ -1,0 +1,6 @@
+aws-cdk-lib==2.115.0
+constructs>=10.0.0,<11.0.0
+de-pipelines-constructs==0.0.265
+pytest==7.2.1
+python-dateutil==2.8.2
+

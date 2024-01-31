@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+        <title>
+            [:REPLACE_SOLUTION_NAME] - [:REPLACE_TARGET_TABLE_NAME]
+        </title>
+        <style>
+            body, pre {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+            }
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+
+            .verticalTableHeader {
+                text-align:center;
+                white-space:nowrap;
+                g-origin:50% 50%;
+                -webkit-transform: rotate(280deg);
+                -moz-transform: rotate(280deg);
+                -ms-transform: rotate(280deg);
+                -o-transform: rotate(280deg);
+                transform: rotate(280deg);
+            
+            }
+            .verticalTableHeader p {
+                margin:0 -100% ;
+                display:inline-block;
+            }
+            .verticalTableHeader p:before{
+                content:'';
+                width:0;
+                padding-top:110%;/* takes width as reference, + 10% for faking some extra padding */
+                display:inline-block;
+                vertical-align:middle;
+            }
+            .small {
+              
+                font-size: 0.8em;
+                font-style: italic;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        
+        
+        <h1>[:REPLACE_SOLUTION_LONG_NAME] - [:REPLACE_TABLE_NAME_MINI_DIMENSION]</h1>
+        <div class="divider"/>
+
+        <h2>History tracking tables for SCD-4 attributes in dimension  [:REPLACE_TARGET_TABLE_NAME]</h2>
+        <h3>Description</h3>
+        <div class="block1">
+            Creates two tables to track the scd-4 attributes.
+            <ul>
+                <li>Mini dimension table</li>
+                <li>Factlessfact table</li>
+            </ul>
+        </div>
+        <h3>Mini Dimension</h3>
+        <div class="block1">
+            <ul>
+                <li>The mini dimension contains all combinations of the scd-4 attributes that belongs to [:REPLACE_TARGET_TABLE_NAME].</li>
+                <li>It does not keep any hisotry. The table itself acts a SCD-0 dimension. No updates, just inserts.</li>
+                <li>For incremental loads:</li>
+                <ul>
+                    <li>Uses the same source- and stage view as [:REPLACE_TARGET_TABLE_NAME].</li>
+                </ul>
+                <li>For initial load:</li>
+                <ul>
+                    <li>Could use another source table than the one used for incremental loads.</li> 
+                    <li>This other table keeps the history of the attributes.</li>
+                </ul>
+            </ul>
+        </div>
+
+        <h3>Factlessfact Table</h3>
+        <div class="block1">
+            
+            <ul>
+                <li>A link between the main dimension and the mini dimension. Holds the actual hisotry.</li>
+            </ul>
+        </div>
+           
+        <h2>Incremental Loads</h2>
+
+        <h3>Mini Dimension: Populate Data</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_POPULATE_MINI_DIMENSION]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_POPULATE_MINI_DIMENSION</span>
+        </div>
+
+            
+
+        <h3>Mini Dimension: Set IsCurrent to 0</h2>
+        <div class="sql">
+            
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SET_ISCURRENT_0_MINI_DIMENSION]
+                </code>
+            </pre>
+            
+        </div>
+        <div class="block1">
+            <span class="small">Variable name:  REPLACE_SET_ISCURRENT_0_MINI_DIMENSION</span>
+        </div>
+
+        <h3>Mini Dimension: Set IsCurrent to 1</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SET_ISCURRENT_1_MINI_DIMENSION]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name:  REPLACE_SET_ISCURRENT_1_MINI_DIMENSION</span>
+        </div>
+
+           
+               
+
+        <h3>FactlessFact: Populate Data</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_POPULATE_FACTLESSFACT_TABLE]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name:  REPLACE_SCD4_POPULATE_FACTLESSFACT_TABLE</span>
+        </div>
+
+        <h3>FactlessFact: IsLatest</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_FACTLESSFACT_SET_ISLATEST]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_FACTLESSFACT_SET_ISLATEST</span>
+        </div>
+
+        <h3>Factlessfact: Optimize Table</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_OPTIMIZE_FACTLESSFACT_TABLE]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name:  REPLACE_SCD4_OPTIMIZE_FACTLESSFACT_TABLE</span>
+        </div>
+
+        <h2>Initial Load</h2>
+        <h3>Mini dimension: Drop Table</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_MINI_DIM_DROP_TABLE]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_MINI_DIM_DROP_TABLE</span>
+        </div>
+        
+
+        <h3>Factlessfact: Drop Table</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_FACTLESSFACT_DROP_TABLE]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_FACTLESSFACT_DROP_TABLE</span>
+        </div>
+
+        <h3>Mini Dimension: Create Table</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                    [:REPLACE_CREATE_MINI_DIMENSION]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_CREATE_MINI_DIMENSION</span>
+        </div>
+
+        <h3>Mini Dimension: Insert Missing Member</h3>
+        
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_MISSING_MEMBER_MINI_DIMENSION]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_MISSING_MEMBER_MINI_DIMENSION</span>
+        </div>
+
+
+        <h3>Factlessfact: Create Table</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL" data-prismjs-copy="Copy to clip board">
+                    [:REPLACE_SCD4_CREATE_FACTLESSFACT_TABLE]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_CREATE_FACTLESSFACT_TABLE</span>
+        </div>
+
+        <h3>Create Initial Load View</h3>
+        
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_FACTLESSFACT_CREATE_INITIAL_LOAD_VIEW]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_FACTLESSFACT_CREATE_INITIAL_LOAD_VIEW</span>
+        </div>
+
+        <h3>Mini Dimension: Insert inital data</h3>
+        <p>
+            Populate the mini dimension before you load the factlessfact!
+        </p>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_INITIAL_LOAD_MINI_DIM]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_INITIAL_LOAD_MINI_DIM</span>
+        </div>
+
+        <h3>Mini Dimension: Set IsCurrent to 1</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SET_ISCURRENT_1_MINI_DIMENSION]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SET_ISCURRENT_1_MINI_DIMENSION</span>
+        </div>
+
+        <h3>Factlessfact: Insert inital data</h3>    
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_FACTLESSFACT_INSERT_INITIAL_DATA]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_FACTLESSFACT_INSERT_INITIAL_DATA</span>
+        </div>
+
+        <h3>Factlessfact: find and update latest record</h3>
+        <div class="sql">
+            <pre data-break-lines="100">
+                <code class="language-SQL">
+                    [:REPLACE_SCD4_FACTLESSFACT_SET_ISLATEST]
+                </code>
+            </pre>
+        </div>
+        <div class="block1">
+            <span class="small">Variable name: REPLACE_SCD4_FACTLESSFACT_SET_ISLATEST</span>
+        </div>
+
+
+        <h2>Settings</h2>
+        <div class="block1">
+        <table>
+            <th>Key</th>
+            <th>Value</th>
+            <tr>
+                <td>
+                    AWS Steps Name
+                </td>
+                <td>
+                    [:REPLACE_RESOURCE_IDENTIFIER]
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    AWS Athena Database
+                </td>
+                <td>
+                    [:REPLACE_DATABASE_NAME]
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    S3 Location
+                </td>
+                <td>
+                    [:REPLACE_TARGET_TABLE_S3_LOCATION]
+                </td>
+            </tr>
+
+        </table>
+        </div>
+
+                
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway.</p>
+            <span class="right">[:REPLACE_CURRENT_DATE]</span>
+        </p>
+        
+        <p><a href="mailto:vgcs-odl@volvo.com">vgcs-odl@volvo.com</a></p>
+        <p> This code and documentation was generated with Oogway Version: [:REPLACE_CODEGEN_VERSION]</p>
+    </footer>
+
+</html>

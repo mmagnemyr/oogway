@@ -1,0 +1,64 @@
+"[:REPLACE_SOLUTION_NAME]mainstepsstepfunction": {
+    "Type": "AWS::StepFunctions::StateMachine",
+    "Properties": {
+     "RoleArn": {
+      "Fn::GetAtt": [
+       "uc0044stepfunctionrolejsonB40B8D4F",
+       "Arn"
+      ]
+     },
+     "DefinitionString": "[:REPLACE_AWS_STEP_FUNCTION_DEFINITION]",
+     "DefinitionSubstitutions": {
+      "AWS_ENVIRONMENT_NAME": "qa",
+      "AWS_ACCOUNT_ID": "658537815488",
+      "AWS_REGION": "eu-west-1",
+      "USECASE_NAME": "uc0044",
+      "WORKGROUP_NAME": "uc0044"
+     },
+     "StateMachineName": "[:REPLACE_AWS_STEP_FUNCTION_NAME]",
+     "Tags": [
+      {
+       "Key": "BuiltBy",
+       "Value": "Pipelines"
+      },
+      {
+       "Key": "Component",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "ECS",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Name",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Owner",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "ProductDomain",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Project",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "SemanticVersion",
+       "Value": "Unknown"
+      },
+      {
+       "Key": "Version",
+       "Value": "Unknown"
+      }
+     ]
+    },
+    "DependsOn": [
+     "uc0044tablelfpermissions"
+    ],
+    "Metadata": {
+     "aws:cdk:path": "uc0044-odl-cdk-stack/uc0044_main_steps-step-function"
+    }
+   }

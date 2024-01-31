@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module oogway_classes</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title">oogway_classes</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:j%3A%5Chome%5Ca370481%5Crepos%5Codl%5Ccode_generation_framework%5Ctype3_dwh_to_usecase%5Ccode_generator%5Coogway_classes.py">j:\home\a370481\repos\odl\code_generation_framework\type3_dwh_to_usecase\code_generator\oogway_classes.py</a></td></tr></table>
+    <p><span class="code">oogway&nbsp;classes</span></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="os.html">os</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="oogway_classes.html#OogwayCircularRefResponse">OogwayCircularRefResponse</a>
+</dt><dt class="heading-text"><a href="oogway_classes.html#OogwayFun">OogwayFun</a>
+</dt><dt class="heading-text"><a href="oogway_classes.html#OogwayOutputCode">OogwayOutputCode</a>
+</dt><dt class="heading-text"><a href="oogway_classes.html#OogwayTable">OogwayTable</a>
+</dt><dt class="heading-text"><a href="oogway_classes.html#OogwayUtils">OogwayUtils</a>
+</dt><dt class="heading-text"><a href="oogway_classes.html#OutputBuilder">OutputBuilder</a>
+</dt></dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="OogwayCircularRefResponse">class <strong>OogwayCircularRefResponse</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor"><span class="code">&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>has_circular_reference</strong> = False</dl>
+
+<dl><dt><strong>table_name</strong> = ''</dl>
+
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="OogwayFun">class <strong>OogwayFun</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor"><span class="code">&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">Class methods defined here:<br>
+<dl><dt><a name="OogwayFun-print_ascii_art2"><strong>print_ascii_art2</strong></a>(file_path, font_size)<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt></dl>
+
+<dl><dt><a name="OogwayFun-welcome"><strong>welcome</strong></a>()<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt><dd><span class="code">Params:<br>
+&nbsp;&nbsp;cls<br>
+Returns:&nbsp;<br>
+&nbsp;&nbsp;nothing</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="OogwayOutputCode">class <strong>OogwayOutputCode</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor"><span class="code">&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>generated_code</strong> = ''</dl>
+
+<dl><dt><strong>html_table_filename</strong> = ''</dl>
+
+<dl><dt><strong>htnl_code_filename</strong> = ''</dl>
+
+<dl><dt><strong>platform_resource_identifier</strong> = ''</dl>
+
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="OogwayTable">class <strong>OogwayTable</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor"><span class="code">&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__annotations__</strong> = {'file': &lt;class 'nt.DirEntry'&gt;}</dl>
+
+<dl><dt><strong>database</strong> = ''</dl>
+
+<dl><dt><strong>dependencies</strong> = []</dl>
+
+<dl><dt><strong>dependencyChain</strong> = 0</dl>
+
+<dl><dt><strong>file</strong> = None</dl>
+
+<dl><dt><strong>powershell_edit</strong> = ''</dl>
+
+<dl><dt><strong>table_name</strong> = ''</dl>
+
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="OogwayUtils">class <strong>OogwayUtils</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor"><span class="code">&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">Class methods defined here:<br>
+<dl><dt><a name="OogwayUtils-check_circular_references"><strong>check_circular_references</strong></a>(tables)<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt></dl>
+
+<dl><dt><a name="OogwayUtils-has_circular_reference"><strong>has_circular_reference</strong></a>(table, visited, table_dict)<span class="grey"><span class="heading-text"> from <a href="builtins.html#type">builtins.type</a></span></span></dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="OutputBuilder">class <strong>OutputBuilder</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor"><span class="code">&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</span></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>aws_account</strong> = ''</dl>
+
+<dl><dt><strong>aws_region</strong> = ''</dl>
+
+<dl><dt><strong>code_file_extension</strong> = '.json'</dl>
+
+<dl><dt><strong>deployment</strong> = 'cdk'</dl>
+
+<dl><dt><strong>orchestration</strong> = 'AWS Steps'</dl>
+
+<dl><dt><strong>platform_compute</strong> = 'AWS'</dl>
+
+<dl><dt><strong>platform_resource_identifier_template</strong> = 'arn:aws:states:[:REPLACE_AWS_REGION]:[:REPLACE_A...OUNT]:stateMachine:[:REPLACE_RESOURCE_IDENTIFIER]'</dl>
+
+<dl><dt><strong>platform_storage</strong> = 'AWS'</dl>
+
+<dl><dt><strong>solutionLongName</strong> = ''</dl>
+
+<dl><dt><strong>solutionName</strong> = ''</dl>
+
+<dl><dt><strong>sql_dialect</strong> = 'AWS Athena'</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

@@ -1,0 +1,7 @@
+aws lakeformation grant-permissions --region eu-west-1 --principal DataLakePrincipalIdentifier="arn:aws:iam::761560768765:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_AccountOwner_a53c1f04f4255821" --resource '{ "Table": {"DatabaseName":"[!REPLACE_DATABASE_NAME]", "Name":"[!REPLACE_TARGET_TABLE]" }}' --permissions "ALL" --profile prod
+
+aws lakeformation grant-permissions --region eu-west-1 --principal DataLakePrincipalIdentifier="arn:aws:iam::761560768765:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_AccountOwner_a53c1f04f4255821" --resource '{ "Table": {"DatabaseName":"[!REPLACE_DATABASE_NAME]", "Name":"[!REPLACE_TARGET_TABLE]" }}' --permissions "ALL" --profile qa
+
+
+aws lakeformation grant-permissions --principal '{"DataLakePrincipalIdentifier": "arn:aws:iam::761560768765:role/aws-reserved/sso.amazonaws.com/eu-west-1/AWSReservedSSO_AccountOwner_a53c1f04f4255821"}' --resource '{"Database": {"Name": "[!REPLACE_DATABASE_NAME]", "CatalogId": "761560768765"}}' --permissions ALL --permissions-with-grant-option ALL --profile prod
+

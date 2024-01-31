@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            Oogway Documentation - Index
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+              font-size: 18px;
+            }
+            .important {
+                font-weight: bold;
+                font-style: italic; 
+            }
+            .highlight {
+                font-weight: bold;
+                font-style: italic;      
+                background-color: yellow;
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>Oogway Code Generator - The Use Case Developer Guide</h1>
+        <div class="divider"/>
+        
+        <h2>What does Oogway do?</h2>
+        <div class="block1">
+            <p>
+
+                You use oogway to create and populate database tables by entering som meta-data about them. Thats it...</br>
+                However, some more words can be said and some of them are mentioned in this document. Happy reading!
+
+                <ul>
+                    <li>Oogway code generator gives you the opportunity to create different kinds of reusable templates using pre-calculated variables.</li>
+                    <li>You can create any kind of templates that use the pre-calculated variables.</li>
+                    <li>It could i.e be a:</li> 
+                    <ul>
+                        <li>AWS Glue Script</li>
+                        <li>AWS Steps State Machine</li>
+                        <li>Jupyter Notebooks</li>
+                        <li>Sql Script</li> 
+                        <li>DBT Scripts</li>  
+                        <li>HTML document</li> 
+                        <li>Python scripts</li>
+                        <li>Databricks Sql Task Type</li>
+                        <li>..or something else, it is up to you.</li>
+                    </ul>
+                    <li>If the list of precalculated variables does not contain what you need then you can easily extend the list with new variables.</li>
+                    <li>Pre-calculated variables are created in the oogway-sql.xlsx file</li>
+                    <li>Templates are written in any text-editor you like.</li>
+                    <li>Templates and pre-calculated variables are brought together with the oogway pyton script.</li>
+                    <li>So, there is no magic or other invisible logic involved.</li>
+                    <li>However, there are still some knowledge behind the the variables. That knowledge is provided by you and other developers!</li>
+                </ul>
+                
+
+                Currently Oogway supports the following 
+                
+                <ul>
+                    
+                        <ul>
+                            <li>AWS Athena SQL to create and populate your tables.</li>
+                            <ul>
+                                <li>Different methods are provided to do this i.e:</li>
+                                <ul>
+                                    <li>Dimensional Modelleing</li>
+                                    <li>Data Vault</li>
+                                    <li>Just plain simple tables that you design.</li>
+                                    <li>Support for ICEBERG and Hive Tables</li>
+                                </ul>
+                            </ul>
+                            <li>AWS Steps State Machines to execute the SQL Code.</li>
+                            <li>AWS Steps State Machines Execution Roles</li>
+                            <li>AWS Event Bridge Rule to schedule automatic start of the main AWS Steps State Machine</li>
+                            <li>AWS CDK project for deployment</li>
+                    
+                        </ul>
+                </ul>
+            </p>
+        </div>
+
+        <h3>Roadmap</h3>
+        <div class="block1">
+            Read about upcoming features <a href="roadmap.html">here</a>
+        </div>
+
+        <h3>Release Notes</h3>
+        <div class="block1">
+            Read about what has been done in current and previous releases <a href="release_notes.html">here</a>
+        </div>
+
+        <h3>Get Started</h3>
+        <ul>
+            <li>Go to your repos folder in bash ie /home/a370481/repos </li>
+            <li>git clone the odl repository if you haven't already done that.  <span class="highlight">git clone "ssh://git.vgt.volvo.com:29418/vgt/odl/odl"</span></li>
+                <ul>
+                    <li>keep it updated with <span class="highlight">git pull.</span></li>
+                </ul>
+            </ul>
+            <li>
+                Start a new PowerShell command prompt in Windows or open your solution folder with Visual Studio Code
+            </li>
+            <li>
+                Navigate to the oogway home folder in the ODL repo. <span class="important"> \odl\code_generation_framework\type3_dwh_to_usecase\codegenerator</span>
+            </li>
+            <li>
+                Install the python requirements
+            </li>
+            <li>
+                Run <span class="highlight">py oogway.py -p <i>[path to your solution]</i> -a init -n <i>[name of the solution]<i></span>
+            </li>
+            <li>
+                Now your solution folder should have the following folders and files
+            </li>
+            <ul>
+                <li>database</li>
+                <ul>
+                    solution.xlsx
+                    <ul>
+                        <li>Open the file and make sure the solution name is correct.</li>
+                        <li>This is the main file for the solution and it contains data that would be common for all of your tables.</li>
+                    </ul>
+                </ul>
+                <li>oogway</li>
+                <ul>
+                    <li>documentation</li>
+                    <ul>
+                        <li>index.html</li>
+                        <li>githelper.html</li>
+                        <li>odl_usecase_setup.html</li> 
+                        <li>roadmap.html</li> 
+                        <li>release_notes.html</li> 
+                    </ul>
+                    <li>backup</li>
+                    <ul>
+                        <li>Currently an empty directory but this will be the place where your future backup of the database folder will be placed.</li>
+                    </ul>
+                    <li>build</li>
+                    <ul>
+                        <li>Currently an empty directory. This will be used during the build process.</li>
+                    </ul>
+                    <li>tmp</li>
+                    <ul>
+                        <li>Currently an empty directory. This will be used during the upgrade process.</li>
+                    </ul>
+                    <li>upgrade</li>
+                    <ul>
+                        <li>Currently an empty directory. </li>
+                        <li>If you need to upgrade your table xlsx files to a later version later on the upgraded files will be placed here for your review.</li>
+                        <li>The upgrade process will not try to replace your original files so you need to do that replace manually.</li>
+                        <ul>
+                            <li>First delete the files you have in the folder database and then copy the files from this folder to the database folder.</li>
+                        </ul>
+                    </ul>
+                </ul>
+                
+                <li>powershell_helper_scripts</li>
+                <ul>
+                    <li>oogway_help.ps1</li>
+                    <ul>
+                        <li>shows oogway.py help</li>
+                    </ul>
+                    <li>oogway_build.ps1</li>
+                    <ul>
+                        <li>this is the script you use to build your solution .</li>
+                        <li>for AWS the deployment to in the solution.xlsx file will be set to cdk</li>
+                        <li>After build process is complete you can use the script doc.ps1 to open the generated documentation.</li>
+                    </ul>
+                    <li>oogway_prod_build.ps1</li>
+                    <ul>
+                        <li>This is the same as oogway_build.ps1 with the exception that this sets the --env option to prod</li>
+                    </ul>
+                    <li>oogway_list.ps1</li>
+                    <ul>
+                        <li>prints a list of the tables you have in the solution</li>
+                    </ul>
+
+                    <li>oogway_add_table.ps1</li>
+                    <ul>
+                        <li>this script will add a new table to your solution.</li>
+                    </ul>
+                    <li>edit.ps1 [table_name]</li>
+                    <ul>
+                        <li>Opens the table name [table_name] excel file.</li>
+                    </ul>
+                    <li>oogway_backup.ps1</li>
+                    <ul>
+                        <li>This script will copy the files in the database folder to a new folder in <b>\oogway\backup</b>.</li>
+                        <li>Most of the actions described here results in a backup of your current files (better safe than sorry!). So you might want to clean up the oogway\backup folder once in a while.</li>
+                    </ul>
+                    <li>oogway_upgrade.ps1</li>
+                    <ul>
+                        <li>If the <span class="highlight">oogway table template</span> is updated to a new version then you can use this script to update your tables to the latest version.</li>
+                        <li>When upgrade is complete the upgraded files are located in \oogway\upgrade</li>
+                        <li>Please examine at least one of them and make sure they look ok.</li>
+                        <li>When done you can use oogway_useupgrade.ps1 to copy the files from upgrade to your working directory (database)</li>
+                    </ul>
+                    <li>oogway_useupgrade.ps1</li>
+                    <ul>
+                        <li>After you have ran oogway_upgrade.ps1 and you decide to use the upgraded files use this script to move the upgraded files to the working directory.</li>
+                        <li>Note: You current files will be moved to a new folder in <b> \oogway\backup</b> before the actual move.</li>
+                    </ul>
+                    <li>oogway_refresh.ps1</li>
+                    <ul>
+                        <li>Copies the latest documentation and powershell scripts from the oogway repo to your repo.</li>
+                    </ul>
+                    <li>odl_help.ps1</li>   
+                        <ul>
+                            Opens the help document for setting up new use case projects in the ODL team.
+                        </ul>
+                    
+                    <li>doc.ps1</li>
+                        <ul>
+                            Opens the generated html documentation in the browser (google chrome).
+                        </ul>
+
+                    <li>help.ps1</li>
+                    <ul>
+                        Opens this page in the browser (google chrome).
+                    </ul>
+                    
+                    
+                </ul>
+            </ul>
+            
+            <li>
+                Now we are ready to create some tables.
+                <ul>
+                    
+                    <li>go to the folder <b>powershell_helper_scripts</b> in your solution directory.</li>
+                    <li>run the powershell script <b>oogway_add_table.ps1 <i>[name of your table]</i></b></li>
+                    <ul>
+                        <li>I.e if you want to add a table called vehicle then run <b>oogway_add_table.ps1 vehicle</b> </li>
+                        <li>In the database folder you should now see your new table as an excel file.</li>
+                        <ul>
+                            <li>database</li>
+                            <ul>
+                                <li>solution.xlsx</li>
+                                <li>vehicle_vXXX.xlsx</li>
+                            </ul>
+                        </ul>
+                        
+                    </ul>
+                </ul>
+            </li>
+            
+        </ul>
+
+        <h3>Solution.xlsx</h3>
+        <ul>
+           
+            <li>We start by opening the file <b>solution.xlsx</b> which should be in your database folder if you did follow the previous steps.</li>
+            <li>You will find a few sheets in the file.</li>
+            <li>Options</li>
+            
+            <ul>
+                
+                <li><b>Solution name</b> Enter the name of your use case. I.e uc0039 </li>
+                <li><b>Deploy to</b> is interesting...</li>
+                <ul>
+                    <li>Enter "cdk" if you are ready to deploy the project to AWS using CDK</li>
+                    <li>Enter "prod" if you would like to manualy test and evaluate the SQL queries AWS prod.</li>
+                    <li>Enter "qa" if you would like to manually test the SQL queries in QA before deploying</li>
+                </ul>
+                <li><b>Database</b> should be set to the same name as your use case i.e uc0039. This will be then name of your new Athena Database.</li>
+                <li><b>Athena Workgroup</b> is the name of the Athena Workgroup to use. It should be the same name as the database.</li>
+                <li><b>Solution long</b> name is used in the HTML templates. Enter the descriptive name of your use case. For uc0039 this would be "VGCS Assets And Connectivity"</li>
+                <li><b>Solution Home Page Url</b> is also used in the HTML templates. It is supposed to be a link to the use case home page.</li>
+                <ul>
+                    <li>Sample value <a href='https://vgcs-confluence.it.volvo.net/display/ODL/UC0039+-+VGCS+Assets+and+Connectivity'>https://vgcs-confluence.it.volvo.net/display/ODL/UC0039+-+VGCS+Assets+and+Connectivity</a></li>
+                </ul>
+                <li>Output</li>
+                <ul>
+                    <li>Sql Dialect</li>
+                    <ul>
+                        <li>Currently only AWS Athena is supported</li>
+                    </ul>
+                    <li>Orchestration</li>
+                    <ul>
+                        <li>What kind of code to be created for both table-scripts and main scripts. </li>
+                    </ul>
+                    <li>Deployment</li>
+                    <ul>
+                        <li>Deployment project to build </li>
+                    </ul>
+                    <li>Code File Extennsion</li>
+                    <ul>
+                        <li>What is the file extension for the output code.</li>
+                        <ul>
+                            <li>i.e aws steps uses json files: .json</li>
+                        </ul>
+                    </ul>
+                </ul>
+                
+            </ul>
+            <li>DMA</li>
+          
+            <ul>
+                <li><b>PURPOSE CODE</b></li>
+                <li>Here you will list the purpose code/codes to be used with your solution. One purpose code per row.</li>
+            </ul>
+            <li>CRON</li>
+            
+            <ul>
+                <li><b>cron year,month,day,hour, minute</b></li>
+                <li>This is when you would like your main aws steps state machine to run.</li>
+            </ul>
+            <li>Views</li>
+            
+            <ul>
+                <li>If you need to create views in your database then you can enter the SQL Select statement and the name of the views here.</li>
+                <li>Why would I want to do that? Various reasons, one is that you would like to expose tables from another database to your users.</li>
+            </ul>
+            <li>You will find some other sheets as well but do not pay atention to them now. They contain default values that will work fine.</li>
+            <li>Close the solution.xlsx file</li>
+        </ul>
+
+        <h3>Designing your tables</h3>
+        <ul>
+            <li>Open your table xlsx file in the database folder.</li>
+            <li>You will find a few sheets in there:</li>
+            <li><span class="important">Options</span></li>
+            <ul>
+                <li><b>Load Method</b></li>
+                    <ul>
+                    <li>Enter the Load Method number you would like to use. Load Methods 
+                        are basically what kind of table you would like to create and how it will be populated.</li>
+                    <li>Load Methods are easy to add and develop so the list will probably change over time. For now we have the following on the menu</li>
+                    <ul>
+                        <li> <a href="templates.html">List of available Load Methods </a></li>
+                        <li>
+                            As you can see in the list Oogway has some knowledge of <i>Kimball Dimensional Modelling</i>. It supports dimension- and fact tables.
+                        </li>
+                        <li>
+                            However if you just want to create a table of the flavour you prefer you can still do that. 
+                        </li>
+                        <li>
+                            And again, if you would like to create and load a table in some other way than the exsisting templates feel free to devlop another! On the list is using Spark for Atehna and Data Valut hub, satelite and link tables.
+                        </li>
+                    </ul>
+                </ul>
+                <li><b>Source Database</b></li>
+                <ul>
+                    <li>This is the name of the database where your source table or view exists.</li>
+                    <li>This can be left blank if you prefer to create your own source view instead of using a pre-existing table.</li>
+                </ul>
+                <li><b>Source Table/View Name</b></li>
+                <ul>
+                        <li>The name of the source table or view you would like to load data from</li>
+                        <li>As said before. You can use your own source-view instead. If so leave this blank.</li>
+                </ul>
+                <li><b>load date column name</b></li>
+                <ul>
+                        <li>The load date is a column that will be automatically added to your table if you use the dimensional modelling templates.</li>
+                        <li>You need to specify the column name in your source that you would like to use for this purpose.</li>
+                        <li>Typically it will be the lake_arrival_date</li>
+                        <li>Leave it blank if you have no idea and it will evaluate to the current timestamp</li>
+                        <li>And again. This is for dimensional modelling purposes so if you use i.e load method 33 you can leave it blank.</li>
+                </ul>
+                <li><b>last_modified_timestamp column name</b></li>
+                <ul>
+                        <li>This is for dimensional modelling only. The last_modified_timestamp is an important thing for this type of modelling.</li>
+                        <ul>
+                            <li>It is the timestamp when the data was last updated in the source.</li>
+                            <li>Important for history tracking and updates.</li>
+                            <li>If you do not know then you can leave it blank and it will evaluate to the current timestamp. Not a very good idea but still something.</li>
+                        </ul>
+                </ul>
+                <li><b>last_modified_timestamp data type</b></li>
+                    <ul>
+                        <li>Since timestamps are a little complicated to handle in all database systems we need to know what the data type of your source column is. Typically it is a string or a timestamp.</li>
+                        <li>Oogway will not try to be smart here. So it is up to you to make sure that the string actually casts to a timestamp. Otherwise it will fail during load time.</li>
+                        <li>If your source contains timestamps of different kinds then you need to create a source view that creates valid timestamps.</li>
+                    </ul>
+                    <li><b>Distinct values only?</b></li>
+                    <ul>
+                        <li>If you want to use DISTINCT when selecting from the source set this value to 1 otherwise leave it 0</li>
+                    </ul>
+                    <li><b>Custom source view?</b></li>
+                    <ul>
+                        <li>If you prefer to use your own custom source view instead of using a predefined source table or view then set this value to 1</li>
+                        <li>If you leave it 0 then you need to provide the name of the source database and source table or view name. See above</li>
+                        <li>The source view you create should contain only the SELECT statement. Not the actual CREATE VIEW clause. Just the SELECT</li>
+                        <li>Paste your SELECT statment in the sheet "Custom Source View". Make sure it works. Oogway will <b>not</b> try to evaluate wheather it works or not.</li>
+                    </ul>
+                    <li><b>'Logical' table name</b></li>
+                    <ul>
+                        <li>This is the name you would like to use for your table. If you use the dimension load method 
+                            then it will add dim or fact as a prefix for your table.</li>
+                        <li>You can turn that feature off by setting the property "Disable Table Prefix" to 0.</li>
+                    </ul>
+                    <li><b>Use DMA on this table?</b></li>
+                    <ul>
+                        <li>If your table contains a vehicleplatformid then you can you this feature to filter the source so that you will fiter out vehciles that do not match the purpose codes for the use case.</li>
+                        <li>When using dimensional modelling this feature is typically only enabled for the vehicle dimension.</li>
+                        <ul>
+                            <li>If the vehicle dimension only contains DMA approved vehicles then the fact tables using this dimensions will also be filtered if you do an inner join to the vehicle dimension.</li>
+                        </ul>
+                    </ul>
+                    <li><b>vehicleplatformid column name</b></li>
+                    <ul>
+                        <li>So if you chose to enable DMA then you need to add a column name in the source table that contains the <b>vehicleplatformid</b></li>
+                    </ul>
+                </ul>
+                </ul>
+            </ul>
+            <li id="setup_columns"><span class="important">COLUMNS</span></li>
+                <ul>
+                    <li>Here you will enter the columns you would like to have in your table.</li>
+                    <li>You will also need to specify the business keys</li>
+                    <li>The business keys is the columns that uniqually identifies a row accoring the the business. This is not a surrogate key.</li>
+                    <li>Alright, now lets take a close look</li>
+                    <ul>
+                        <li>Target Column Name</li>
+                        <ul>
+                            <li>The name of the column in your target table</li>
+                        </ul>
+                        <li>Source Column Name</li>
+                        <ul>
+                            <li>Name of the column in the source.</li>
+                            <li>You can leave this blank if the source column name is the same as the target column name or if you use a calculation to create the column.</li>
+                        </ul>
+                        <li>Target Data Type</li>
+                        <ul>
+                            <li>
+                                Data Type in your target table
+                            </li>
+                        </ul>
+                        <li>Source Data Type</li>
+                        <ul>
+                            <li>
+                                Source Data Type
+                            </li>
+                            <li>
+                                You can leave this blank if the source data type is the same as the target data type
+                            </li>
+                        </ul>
+                        <li>SCD Type No</li>
+                        <ul>
+                            <li>SCD is short for Slowly Changing Dimension</li>
+                            <li>As the name suggest this only applies to the dimension table load method. 
+                                Do not use this with any ohter load methods.</li>
+                            <li>Supported SCD Types are</li>
+                            <ul>
+                                <li>1-Column will be updated in the dimension table if it changes in source. No history tracking</li>
+                                <li>2-SCD Type2 will insert a new row in the dimension table if any Type 2 columns are updated in source.</li>
+                                <ul>
+                                    <li>Please note that the new row will have the same business key but another warehouse key (wk-key)</li>
+                                </ul>
+                                <ul>
+                                    <li>This will ensure that we track the history of the SCD-2 columns</li>
+                                    <li>SCD-2 is usefull for small dimension tables that rarely updates. For large dimensions with many attributes it is not recommended to use SCD-2</li>
+                                </ul>
+                                <li>3-is currenty not supported and it is not frequently used in the real world.</li>
+                                <li>4-Creates a so called mini-dimension table that will track the history of the selected columns</li>
+                                <li>5-not supported</li>
+                                <li>6-not supported</li>
+                                <li>7-not supported</li>
+                            </ul>
+                        </ul>
+                        <li>Calculation</li>
+                        <ul>
+                            <li>A sql formula that evaluates to a valid data type. I.e it could be a case-statment or a CAST or just a number.</li>
+                        </ul>
+                        <li>Partition By</li>
+                        <ul>
+                            <li>The table will be partitioned on the columns you select</li>
+                        </ul>
+                        <li>Business Key</li>
+                        <ul>
+                            <li>Put 1 if the column is part of the business key. Leave it blank otherwise</li>
+                        </ul>
+                        <li>Warehouse Key</li>
+                        <ul>
+                            <li>1 if this is a warehouse key. Otherwise leave it blank/li>
+                        </ul>
+                        <li>Lookup Dimension</li>
+                        <ul>
+                            <li>If this is a favt table and the column is a wk-key then you will need to enter the name of the dimension to get this wk-key.</li>
+                            <li>If it is not a fact table then just leave it blank</li>
+                        </ul>
+                        <li>Join Type</li>
+                        <ul>
+                            <li>THe join type for the dimension. Could be INNER or LEFT</li>
+                        </ul>
+                        <li>Inferred Member</li>
+                        <ul>
+                            <li>Not currently supported</li>
+                        </ul>
+                        <li>Source Condition</li>
+                        <ul>
+                            <li>A source condition that will used when selecting data from the source table or view.</li>
+                            <li>Leave it blank if you do not know</li>
+                        </ul>
+                        <li>Sample Condition</li>
+                        <ul>
+                            <li>If the source condition includes a runtime variable then you can enter a sample value here so that you easily could test the generated SQL.</li>
+                        </ul>
+                        <ul>
+
+                        </ul>
+                        <li>Table Version</li>
+                        <ul>
+                            <li>If you add or remove columns for a table after that is created for the first time then this feature will generat a change-set so that you can easliy update the table.</li>
+                        </ul>
+                        <li>Comment</li>
+                        <ul>
+                            <li>Just a litte something for the HTML documentation</li>
+                        </ul>
+                    </ul>
+                </ul>
+                <li><b>Custom Source View</b></li>
+                <ul>
+                    <li>As mentioned above this is where you past in the SELECT statement of the view you would like to use as the source for your table.</li>
+                    <li>If you prefer to use a predefined table in a source database then leave this blank.</li>
+                </ul>
+                <li><b>Dimensions</b></li>
+                <ul>
+                    <li>This is only used by the fact table template.</li>
+                    <li>For all dimensions you are using in the fact table you need to specify the business keys to create the join upon.</li>
+                    <li>I.e if you have a fact table that uses the vehicle dimensions and the business key in that dimension is named "vehicleprofileid" and the namne in the source is "vpi" then you enter "vpi" for the source column name and "vehicleplatformid" for the dimensional key.
+                         Business keys can be composite as well.</li>
+                </ul>
+                <li><b>Doc</b></li>
+                <ul>
+                    <li>Here you can enter a description of the table and/or your source view. Will be used in the HTML templates when generating the documentation for your table.</li>
+                </ul>
+            </ul>
+            </ul>
+        </ul>
+        
+    </p>
+    
+
+        <h2>Building your solution</h2>
+        <div class="block1">
+            <p>
+                When you have created the tables you need you can <span class="highlight">build</span> the solution.</br>
+                The build process will create AWS Steps scripts, HTML documentation and finally a cdk project you can use to deploy the code to AWS.
+
+            </p>
+            <ul>
+                <li>Go to the <span class="highlight">powershell_helper_scripts folder</span> in your solution</li>
+                <li>run the following: <span class="highlight">oogway_build.ps1</span></li>
+                <li>Depending on how many tables you have in your solution the time to complete this step will varley.</li>
+                <li>When successfully done you will find</li>
+                <ul>
+                    <li>the generated AWS Steps in the folder <span class="highlight">\deploy\aws\steps</span></li>
+                    <li>the generated HTML documentation <span class="highlight">\doc\index.html</span></li>
+                    <li>the cdk project files will be in the root folder of your solution</li>
+                </ul> 
+            </ul>
+        </div>
+
+        <h2>Deploying the solution to AWS</h2>
+
+        <h2>Variables</h2>
+        <div class="block1">
+            The code generator handles 3 types of Variables:
+            <ul>
+                <li>Design-time variables.</li>
+                <ul>
+                    <li>As a table designer you do not really have to do anything with them.</li>
+                    <li>As a developer of the code generator you will need them and you can add new ones for new purposes.</li>
+                    <li>This is variables that will be evaluated when you build the output files.</li>
+                    <li>They are hard-coded into the files but they can contain run-time variables.</li>
+                    <li>The list of design-time variables are available in the Excel Template.</li>
+                    <li>Most of them are calculated by excel and then inserted into the output files.</li>
+                    <li>In the template files you will se the design-time variables referenced with "[:REPLACE_" i.e [:REPLACE_SOLUTION_NAME] </li>
+                </ul>
+                <li>Run-time variables.</li>
+                    <ul>
+                        <li>This is variables that are evaluated during the actual runtime of the script.</li>
+                        <li>In AWS Steps we will use a lambda fuction to get the value of the run-time variables.</li>
+                        <li>It is easy to add new run-time variables if you need them. However you might need to update the lambda function that evaluates them as well.</li>
+                        <li>You reference a run-time variable with "[:" i.e:</li>
+                            <ul>
+                                <li>[:date_yyyy_mm_dd] will give you the current date in format: yyyy-mm-dd. </li>
+                                <li>[:date_yyyymmdd] will give you the current date in format: yyyymmdd</li>
+                            </ul> 
+                    </ul>
+                <li>CDK Variables.</li>
+                <ul>
+                    <li>This is variables that are evaluated at deploy time.</li>
+                </ul>
+            </ul>
+        </div>
+
+        
+
+       
+
+        <h2>Templates</h2>
+        <div class="block1">
+            <a href="templates.html">List of available templates </a>
+        </div>
+
+        <h2 id="sample1">Samples</h2>
+        <h3>Sample #1: uc0097</h3>
+        <div class="block1">
+            <h3>What Will We Create?</h3>
+            <ul>
+                <li>A use case with name uc0097-cdk</li>
+                <li>Purpose code is <span class="highlight">P3</span> and  <span class="highlight">RND</span></li>
+                <li>According to the requirements for this use case we will </li>
+                <ul>
+                    <li> create a vehicle dimension table with the following columns:</li>
+                
+
+                
+                <ul>
+                    <li>VIN</li>
+                    <li>Chassis Number</li>
+                    <li>Chassis Series</li>
+                    <li>Country Of Operation</li>
+                </ul>
+                </ul>
+            </ul>
+
+            <h3>Let's start!</h3>
+            <ul>
+                <li>First things first! Create the repo for the use case. Follow the steps described <a href="#setup_step1">here!</a> </li>
+                <li>When done, you will have a new folder called <span class="highlight">uc0097-cdk</span> in your <span class=highlight">repos</span> folder.</li>
+                <li>Now, go to the oogway home in your clone of the ODL repo</li>
+                <ul>
+                    <li>It should be here => <span class="highlight">odl\code_generation_framework\type3_dwh_to_usecase\codegenerator</span></li>
+                    <li>Do not forget to <span class="highlight">git pull</span>  for the latest updates.</li>
+                    <li>Please remeber that you now need to be in Windows, not Ubuntu since we will work with Excel and PowerShell</li>
+                </ul>
+                <li>Let's assume your full path to the repos is <span class="highlight">j:\home\aid\repos\uc0097-cdk</span></li>
+                <li>Now, run the following to initialize the use case folder: </li>
+                    <ul>
+                        <li><span class="highlight">py .\oogway.py -p j:\home\userid\repos\uc0097-cdk\ -a init -n uc0097-cdk </span></li>
+                        <li>parameters</li> 
+                        <ul>
+                            <li>-p (=path) is the path to the use case folder</li>
+                            <li>-a (=action) is init</li>  
+                            <li>-n (=use case name) is uc0097-cdk</li>     
+                        </ul>
+                    </ul>
+            </ul>
+
+            <ul>
+              
+                <li>Go to your solution home folder: j:\home\userid\repos\uc0097-cdk\</li>
+                
+                <li>switch to folder <span class="highlight">powershell_helper_scripts</span> </li>
+                <li>Now, we will add the table <span class="highlight">Vehicle</span></li>
+                <li>Run the following ./oogway_add_table.ps1 Vehicle</li>
+                <li>Check the <span class="highlight">database</span> folder.</li>
+                <ul>
+                    <li>You should find the following files:</li>
+                    <ul>
+                        <li>solution.xlsx</li>
+                        <li>vehicle_v106.xlsx</li>
+                        <ul>
+                            <li>This is the file where you need to add the meta-data for the table Vehicle.</li> 
+                            <li>Note that the latest oogway version number is attached to the file name. It this case <span class="highlight"> v106</span> </li>
+                        </ul>
+                    </ul>
+                </ul>
+                <li>Now, you need to design the vehicle table.</li>
+                <ul>
+                    <li>The steps for doing this is described <a href="#setup_columns">here</a>. It's easy if you know your data. If not you need to do some analysis on the source databases. </li>
+                    <li>Open database\vehicle_v106.xlsx with Excel</li>
+                    <ul>
+                        <li>Go the sheet "Options"</li>
+                        <li>For now we can use <span class="highlight">odl_dwh_raw</span> as source database </li>
+                        <li>Use <span class="highlight">common_dim_vehicle</span> as source table.</li>
+                        <li>You can leave the Load Method as it is. Load Method 1 will create a dimension table as ICEBERG </li>
+                        <li>Make sure "Is Dimensional Table" is set to 1</li>
+                        <li>Leave "Use SCD-2" to 0</li>
+                        <li>Since we have DMA purpose code and this table needs be filtered..</li>
+                        <ul>
+                            <li>Set "Use DMA on this table" to 1</li>
+                            <ul>
+                                <li>this indicates that it will use the VLAR database to filter the source table.</li>
+                            </ul>
+                            <li>Set the "vehicleplatformid column name" to vehicleplatformid</li>
+                            <ul>
+                                <li>Why do I need to do this? First the vehicleplatformid must be part of the source otherwise we can not use it for DMA</li>
+                                <li>Second, the <b>vehicleplatformid</b> has many different aliases in the odl data lake. So specify the column name is important!</li>
+                                <li>The column you mentioned as the alias name for "vehicleplatformid" does not need to be part of the target table. Just the source.</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                    
+                    <li>Go to this table in AWS Athena and examine it. What columns exists in the table?</li>
+                    <li>Fill in the columns you need in sheet COLUMNS</li>
+                    <li>for all the columns added make sure the SCD-Type is left blank. We will use this feature in later samples.</li>
+                    <ul>
+                        <li>Since this is a dimension table it needs a <b>technical key</b>.</li> 
+                        <ul>
+                            <li>Add column name <span class="highlight"> wkVehicle</span> </li>
+                            <ul>
+                                <li>set the target data type to <span class="highligt" >bigint</span></li>
+                                <li>the source column is left blank since this column does not exist in source. It will be calculated during load-time.</li>
+                                <li>set Warehouse Key to 1</li>
+                                <ul>
+                                    <li>this indicates that this is the <span class="highlight">technical key</span> for the dimension.</li>
+                                </ul>
+                            </ul>
+                            <li>Next column should be named ChassisNumber and it will be a string in the target table.</li>
+                            <ul>
+                                <li>this is a good candidate for part of the business key/natural key. So set Business Key to 1.</li>
+                            </ul>
+                            <li>Next column should be named ChassisSeries and it will be a string in the target table.</li>
+                            <ul>
+                                <li>this is also a good candidate for part of the business key/natural key. So set Business Key to 1.</li>
+                                <li>We now have a composite business key that is built up by the two columns ChassisNumber and ChassisSeries</li>
+                            </ul>
+                            <li>Now, keep addning the columns you need the same way as described. Make sure the non-calculated columns really exists in the source!</li>
+                            <ul>
+                                <li>Typos happens, make sure you didn't do any!</li>
+                            </ul>
+
+                        </ul>
+                    </ul>
+                    
+                </ul>
+                <li>Save and close the Excel Woorkbook</li>
+                <li><span class="highlight">Congratulations!</span> You have now created your first table!</li>
+            </ul>
+        </br>
+        
+            <h3>Let's build the solution</h3>
+            <ul>
+                <li>Build will create the source code, documentation and CDK project for deployment.</li>
+                <li>run the script <span class="highlight">./oogway_build.ps1</span> and wait for it to complete!</li>
+                <li>When done you will find </li>
+                <ul>
+                    <li>AWS Steps code is in the deploy\steps folder</li>
+                    <li>the documentation in the doc\html folder</li>
+                    <li>CDK is in the root folder!</li>
+                </ul>
+                
+            </ul>
+        </div>
+
+        
+        
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway. We hope you soon will be part of the Oogway developer team! Happy coding!</p>  
+            <p>Please keep this documentation updated.</p>
+        </p>
+        
+        
+       
+    </footer>
+
+</html>

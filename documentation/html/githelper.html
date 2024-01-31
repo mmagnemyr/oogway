@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.css"> 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.css">
+
+
+        <title>
+            Git Helper - Index
+        </title>
+        <style>
+            body {
+              font-family: "Roboto", sans-serif;
+              padding: 20px;
+              font-size: 18px;
+            }
+            .important {
+                font-weight: bold;
+                font-style: italic; 
+            }
+            .highlight {
+                font-weight: bold;
+                font-style: italic;      
+                background-color: yellow;
+                    
+                    
+            }
+            table {
+                border-collapse: collapse;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                min-width: 400px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+           th {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            th,td {
+                padding: 12px 15px;
+            }
+
+            tr {
+                border-bottom: 1px solid #dddddd;
+            }
+
+            tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
+
+            .left {
+                text-align:left;
+            }
+            .right {
+                float:right;
+            }
+
+            .block1 {
+                margin-left:20px;
+            }
+
+            .sql {
+                margin-left: 20px;
+                padding: 10px;
+                background-color: whitesmoke;
+                max-width:90%;
+                font-size: 15px;
+                word-wrap:break-word;
+            }
+            .divider {
+                margin-top: 20px;
+                width: 100%;
+                border-top: 2px solid #bbb;
+            }
+        </style>
+    </head>
+    <body class="line-numbers">
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/normalize-whitespace/prism-normalize-whitespace.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/toolbar/prism-toolbar.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+
+        <h1>Git Helper</h1>
+        <div class="divider"/>
+
+        <h2>Solving different scenarios</h2>
+        <h3>push with hooks </h3>
+        <div class="block1">
+            git push origin HEAD:refs/for/main
+        </div>
+        <h3>Working with branches</h3>
+        <div class="block1">
+            <h4>Create a new branch</h4>
+            git checkout -b ＜new-branch＞
+
+        
+            <h4>Switching branches</h4>
+            git checkout ＜branchname＞
+
+            <h4>Merge</h4>
+            git merge is used to combine two branches.
+        </div>
+        <h3>Merge Conflicts</h3>
+        <div class="block1">
+            Version control systems are all about managing contributions between multiple distributed authors ( usually developers ). Sometimes multiple developers may try to edit the same content. If Developer A tries to edit code that Developer B is editing a conflict may occur. To alleviate the occurrence of conflicts developers will work in separate isolated branches. The git merge command's primary responsibility is to combine separate branches and resolve any conflicting edits.
+        </div>
+
+        <h2>git clone</h2>
+        <h2>git fetch</h2>
+        <h2>git merge</h2>
+        <div class="block1">
+            Merging is Git's way of putting a forked history back together again. The git merge command lets you take the independent lines of development created by git branch and integrate them into a single branch.
+
+Note that all of the commands presented below merge into the current branch. The current branch will be updated to reflect the merge, but the target branch will be completely unaffected. Again, this means that git merge is often used in conjunction with git checkout for selecting the current branch and git branch -d for deleting the obsolete target branch.
+        </div>
+        <div class="block1">
+            The git fetch command downloads commits, files, and refs from a remote repository into your local repo. Fetching is what you do when you want to see what everybody else has been working on. 
+        </div>
+        <h2>git stash</h2>
+        <div class="block1">
+            <h3>What?</h3>
+            Stash the changes in a dirty working directory away
+                
+            <h3>Why?</h3>
+            when you want to record the current state of the working directory and the index, but want to go back to a clean working directory. The command saves your local modifications away and reverts the working directory to match the HEAD commit.    
+
+            <h3>Some notes about it</h3>
+            <ul>
+                <li>switches</li>
+                <ul>
+                    <li>show</li>
+                    <ul>
+                        <li>Show the changes recorded in the stash entry as a diff between the stashed contents and the commit back when the stash entry was first created</li>
+                    </ul>
+                    <li>list</li>
+                    <ul>
+                        <li>List the stash entries that you currently have.</li>
+                    </ul>
+                    <li>push</li>
+                    <ul>
+                        <li>
+                            same as git stash but with a lot of options. 
+                        </li>
+                    </ul>
+                    <li>pop</li>
+                    <ul>
+                        <li>oposite of push</li>
+                    </ul>
+                </ul>
+            </ul>
+
+            <h3>Documentation</h3>
+            <a href="https://git-scm.com/docs/git-stash">https://git-scm.com/docs/git-stash</a>
+        </div>
+        <h2>git commit</h2>
+        <h2>git pull</h2>
+        <div class="block1">
+            rebase
+        </div>
+        <h3>Documentation</h3>
+        <a href="https://git-scm.com/docs/git-pull">https://git-scm.com/docs/git-pull</a>
+        <h2>git push</h2>
+        <div class="block1">
+            The git push command is used to upload local repository content to a remote repository. Pushing is how you transfer commits from your local repository to a remote repo.    
+        </div>
+        <h2>git status</h2>
+        <h2>git log</h2>
+        <h2>git branch</h2>
+        <h2>git checkout</h2>
+       
+    </body>
+
+    <div class="divider"/>
+    <footer>
+        <p class="left">
+            <p>Thank you for using Oogway. We hope you soon will be part of the Oogway developer team! Happy coding!</p>  
+            <p>Please keep this documentation updated.</p>
+        </p>
+    </footer>
+</html>
